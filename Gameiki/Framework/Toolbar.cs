@@ -12,11 +12,19 @@ namespace Gameiki.Framework {
     internal sealed class Toolbar : UserInterfaceItem {
         private readonly List<Texture2D> _buttons = new List<Texture2D> {
             Main.itemTexture[ItemID.SilverAxe],
+            Main.itemTexture[ItemID.Toolbelt],
+            Main.itemTexture[ItemID.AngelWings],
+            //Main.npcTexture[NPCID.FromNetId(NPCID.GreenSlime)],
+            Main.itemTexture[ItemID.TrashCan],
+            Main.mapIconTexture[0],
+            Main.itemTexture[ItemID.Teleporter],
+            Main.sun3Texture,
             Main.npcHeadTexture[2]
         };
         
         public Toolbar() {
-            Boundaries = new Rectangle(Main.screenWidth / 2 - Main.chatBackTexture.Width / 2, Main.screenHeight - 45, Main.chatBackTexture.Width, 45);
+            var width = _buttons.Sum(b => b.Width + 5) + 5;
+            Boundaries = new Rectangle(Main.screenWidth / 2 - width / 2, Main.screenHeight - 45, width, 45);
         }
         
         public override AnchorPosition AnchorPosition { get; protected set; } = AnchorPosition.Bottom;
