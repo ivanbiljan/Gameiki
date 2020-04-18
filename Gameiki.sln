@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gameiki", "Gameiki\Gameiki.csproj", "{43C535F7-952A-4D9E-B4F9-5EFF6AC89E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gameiki.Patcher", "Gameiki.Patcher\Gameiki.Patcher.csproj", "{DED9C873-1EA9-4BF5-84E3-D7F3A8CC207B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43C535F7-952A-4D9E-B4F9-5EFF6AC89E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43C535F7-952A-4D9E-B4F9-5EFF6AC89E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43C535F7-952A-4D9E-B4F9-5EFF6AC89E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43C535F7-952A-4D9E-B4F9-5EFF6AC89E46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED9C873-1EA9-4BF5-84E3-D7F3A8CC207B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED9C873-1EA9-4BF5-84E3-D7F3A8CC207B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED9C873-1EA9-4BF5-84E3-D7F3A8CC207B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED9C873-1EA9-4BF5-84E3-D7F3A8CC207B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
