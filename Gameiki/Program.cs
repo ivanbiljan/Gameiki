@@ -13,6 +13,8 @@ using Terraria;
 namespace Gameiki {
     internal static class Program {
         private static Assembly _terrariaAssembly;
+        private static MouseState _currentMouseState;
+        private static MouseState _previousMouseState;
         
         /// <summary>
         /// The main entry point for the application.
@@ -34,16 +36,19 @@ namespace Gameiki {
         }
 
         private static void PostUpdate(object sender, EventArgs e) {
-            if (Main.mapFullscreen && _currentMouseState.RightButton == ButtonState.Released &&
+            if (Terraria.Main.mapFullscreen && _currentMouseState.RightButton == ButtonState.Released &&
                 _previousMouseState.RightButton == ButtonState.Pressed)
             {
                 var targetLocation = new Vector2(
-                    Main.mapFullscreenPos.X + (Main.mouseX - Main.screenWidth / 2) * 0.06255F *
-                    (16 / Main.mapFullscreenScale),
-                    Main.mapFullscreenPos.Y + (Main.mouseY - Main.screenHeight / 2) * 0.06255F *
-                    (16 / Main.mapFullscreenScale));
-                Client.Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
+                    Terraria.Main.mapFullscreenPos.X + (Terraria.Main.mouseX - Terraria.Main.screenWidth / 2) * 0.06255F *
+                    (16 / Terraria.Main.mapFullscreenScale),
+                    Terraria.Main.mapFullscreenPos.Y + (Terraria.Main.mouseY - Terraria.Main.screenHeight / 2) * 0.06255F *
+                    (16 / Terraria.Main.mapFullscreenScale));
+                Terraria.Main.player[Terraria.Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
             }
+
+            _previousMouseState = _currentMouseState;
+            _currentMouseState = Mouse.GetState();
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args) {
