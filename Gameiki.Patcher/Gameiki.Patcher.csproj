@@ -62,6 +62,7 @@
     <Compile Include="Cecil\DoUpdateModification.cs" />
     <Compile Include="Cecil\DrawModification.cs" />
     <Compile Include="Cecil\IModification.cs" />
+    <Compile Include="Cecil\InitializeModification.cs" />
     <Compile Include="Cecil\PrivateMembersToPublic.cs" />
     <Compile Include="Cecil\SteamInitializeModification.cs" />
     <Compile Include="Events\DrawEventArgs.cs" />

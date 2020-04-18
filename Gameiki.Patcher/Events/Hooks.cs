@@ -24,6 +24,11 @@ namespace Gameiki.Patcher.Events {
         /// </summary>
         public static EventHandler PostUpdate;
 
+        /// <summary>
+        /// Occurs after Terraria initializes.
+        /// </summary>
+        public static EventHandler GameInitialized;
+
         internal static void InvokePreDraw() {
             PreDraw?.Invoke(null, new DrawEventArgs());
         }
@@ -38,6 +43,10 @@ namespace Gameiki.Patcher.Events {
 
         internal static void InvokePostUpdate() {
             PostUpdate?.Invoke(null, EventArgs.Empty);
+        }
+
+        internal static void InvokeGameInitialize() {
+            GameInitialized?.Invoke(null, EventArgs.Empty);
         }
     }
 }

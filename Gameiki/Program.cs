@@ -7,15 +7,19 @@ using System.Runtime;
 using System.Threading.Tasks;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
+using TMain = Terraria.Main;
 
 namespace Gameiki {
     internal static class Program {
+        private static Texture2D GeneralTexture;
+        
         private static Assembly _terrariaAssembly;
         private static MouseState _currentMouseState;
         private static MouseState _previousMouseState;
-        
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,9 +30,19 @@ namespace Gameiki {
             
             // Setup event handlers
             Hooks.PostUpdate += PostUpdate;
+            Hooks.PostDraw += PostDraw;
 
             // Run Terraria
             RunTerraria();
+        }
+
+        private static void PostDraw(object sender, DrawEventArgs e) {
+            Terraria.Main.spriteBatch.Begin();
+            GeneralTexture = new Texture2D(Terraria.Main.instance.GraphicsDevice, 1, 1);
+            GeneralTexture.SetData(new[] {Color.White});
+            Terraria.Main.spriteBatch.Draw(GeneralTexture, new Vector2(80, TMain.screenHeight - 50), new Rectangle(0, 0, 1000, 20),
+                Color.Aqua);
+            Terraria.Main.spriteBatch.End();
         }
 
         private static void RunTerraria() {
@@ -46,7 +60,7 @@ namespace Gameiki {
                     (16 / Terraria.Main.mapFullscreenScale));
                 Terraria.Main.player[Terraria.Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
             }
-
+            
             _previousMouseState = _currentMouseState;
             _currentMouseState = Mouse.GetState();
         }
