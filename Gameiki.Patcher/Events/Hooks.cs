@@ -45,7 +45,7 @@ namespace Gameiki.Patcher.Events {
             PostUpdate?.Invoke(null, EventArgs.Empty);
         }
 
-        internal static void InvokeGameInitialize() {
+        internal static void InvokeGameInitialized() {
             GameInitialized?.Invoke(null, EventArgs.Empty);
         }
     }

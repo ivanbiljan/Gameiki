@@ -22,11 +22,11 @@ namespace Gameiki.Patcher.Cecil {
                 methodReference.Name == "Clear");
             doDraw.InsertAfter(doDrawTargetInstruction,
                 Instruction.Create(OpCodes.Call,
-                    main.Module.ImportReference(typeof(Hooks).GetMethod("InvokePreDraw",
+                    main.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePreDraw),
                         BindingFlags.NonPublic | BindingFlags.Static))));
             doDraw.InjectEnds(
                 Instruction.Create(OpCodes.Call,
-                    main.Module.ImportReference(typeof(Hooks).GetMethod("InvokePostDraw",
+                    main.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePostDraw),
                         BindingFlags.NonPublic | BindingFlags.Static))));
         }
     }

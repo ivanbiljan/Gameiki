@@ -16,7 +16,7 @@ namespace Gameiki.Patcher.Cecil {
             Debug.Assert(initialize != null);
 
             initialize.InjectEnds(Instruction.Create(OpCodes.Call,
-                main.Module.ImportReference(typeof(Hooks).GetMethod("InvokeGameInitialized",
+                main.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokeGameInitialized),
                     BindingFlags.NonPublic | BindingFlags.Static))));
         }
     }
