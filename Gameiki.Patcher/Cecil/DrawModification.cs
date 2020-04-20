@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Gameiki.Patcher.Events;
@@ -15,7 +14,7 @@ namespace Gameiki.Patcher.Cecil {
 
             var doDraw = main.Methods.FirstOrDefault(m => m.Name == "DoDraw");
             Debug.Assert(doDraw != null);
-            
+
             var doDrawTargetInstruction = doDraw.Body.Instructions.Single(i =>
                 i.OpCode == OpCodes.Callvirt && i.Operand is MethodReference methodReference &&
                 methodReference.DeclaringType.FullName == "Microsoft.Xna.Framework.Graphics.GraphicsDevice" &&

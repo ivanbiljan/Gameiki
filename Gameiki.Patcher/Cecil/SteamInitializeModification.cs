@@ -10,7 +10,7 @@ namespace Gameiki.Patcher.Cecil {
             var socialApi = assemblyDefinition.MainModule.Types.FirstOrDefault(t => t.Name == "SocialAPI");
             var initialize = socialApi.Methods.FirstOrDefault(m => m.Name == "Initialize");
             var shutdown = socialApi.Methods.FirstOrDefault(m => m.Name == "Shutdown");
-            
+
             initialize.InsertBefore(initialize.Body.Instructions[0], Instruction.Create(OpCodes.Ret));
             shutdown.InsertBefore(shutdown.Body.Instructions[0], Instruction.Create(OpCodes.Ret));
         }

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Framework\AnchorPosition.cs" />
     <Compile Include="Framework\Toolbar.cs" />
+    <Compile Include="Framework\UIWindow.cs" />
     <Compile Include="Framework\UserInterfaceItem.cs" />
     <Compile Include="Gameiki.cs" />
     <Compile Include="Program.cs" />

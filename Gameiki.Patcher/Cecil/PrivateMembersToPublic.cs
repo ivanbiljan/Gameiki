@@ -26,7 +26,7 @@ namespace Gameiki.Patcher.Cecil {
                         property.GetMethod.IsPrivate = false;
                         property.GetMethod.IsPublic = true;
                     }
-                    
+
                     if (property.SetMethod != null) {
                         property.SetMethod.IsPrivate = false;
                         property.SetMethod.IsPublic = true;

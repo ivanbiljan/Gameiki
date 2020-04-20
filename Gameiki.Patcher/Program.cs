@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.SymbolStore;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -36,7 +35,7 @@ namespace Gameiki.Patcher {
                 terraria.Write(stream);
                 File.WriteAllBytes("patched.exe", stream.ToArray());
             }
-            
+
             Console.WriteLine("> Done");
         }
     }

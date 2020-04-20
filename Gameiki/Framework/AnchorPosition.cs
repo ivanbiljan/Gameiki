@@ -1,8 +1,12 @@
 ﻿namespace Gameiki.Framework {
     /// <summary>
-    /// Specifies the anchor position of a UI element.
+    ///     Specifies the anchor position of a UI element.
     /// </summary>
     public enum AnchorPosition {
-        Left, Right, Top, Bottom, Float
+        Left,
+        Right,
+        Top,
+        Bottom,
+        Float
     }
 }

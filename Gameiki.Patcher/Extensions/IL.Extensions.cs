@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
@@ -8,11 +6,11 @@ using Mono.Cecil.Cil;
 
 namespace Gameiki.Patcher.Extensions {
     /// <summary>
-    /// Defines extension methods for various Cecil types.
+    ///     Defines extension methods for various Cecil types.
     /// </summary>
     public static class ILExtensions {
         /// <summary>
-        /// Injects the specified instruction range after the provided target instruction.
+        ///     Injects the specified instruction range after the provided target instruction.
         /// </summary>
         /// <param name="methodDefinition">The method definition, which must not be <c>null</c>.</param>
         /// <param name="target">The target instruction, which must not be <c>null</c>.</param>
@@ -51,7 +49,7 @@ namespace Gameiki.Patcher.Extensions {
             if (instructions == null) {
                 throw new ArgumentNullException(nameof(instructions));
             }
-            
+
             var processor = methodDefinition.Body.GetILProcessor();
             foreach (var instruction in instructions) {
                 processor.InsertBefore(target, instruction);
@@ -59,7 +57,7 @@ namespace Gameiki.Patcher.Extensions {
         }
 
         /// <summary>
-        /// Scans the method and injects the specified instruction range before any return calls.  
+        ///     Scans the method and injects the specified instruction range before any return calls.
         /// </summary>
         /// <param name="methodDefinition">The method definition, which must not be <c>null</c>.</param>
         /// <param name="instructions">The instruction pattern, which must not be <c>null</c>.</param>
@@ -73,7 +71,7 @@ namespace Gameiki.Patcher.Extensions {
             }
 
             var retInstructions = methodDefinition.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToArray();
-            
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < retInstructions.Length; ++i) {
                 InsertAfter(methodDefinition, retInstructions[i].Previous, instructions);

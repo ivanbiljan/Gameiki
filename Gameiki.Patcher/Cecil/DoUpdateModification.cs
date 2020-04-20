@@ -14,7 +14,7 @@ namespace Gameiki.Patcher.Cecil {
 
             var doUpdate = main.Methods.FirstOrDefault(m => m.Name == "DoUpdate");
             Debug.Assert(doUpdate != null);
-            
+
             doUpdate.InsertBefore(doUpdate.Body.Instructions[0],
                 Instruction.Create(OpCodes.Call,
                     main.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePreUpdate),

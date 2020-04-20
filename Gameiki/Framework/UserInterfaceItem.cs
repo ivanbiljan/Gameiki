@@ -3,32 +3,21 @@ using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 
 namespace Gameiki.Framework {
+    // TODO expand upon this
     public abstract class UserInterfaceItem : IDisposable {
         protected UserInterfaceItem() {
             
         }
-        
-        public abstract AnchorPosition AnchorPosition { get; protected set; }
-        
-        public abstract Rectangle Boundaries { get; protected set; }
-        
-        public abstract void Draw(object sender, DrawEventArgs args);
 
-        public virtual void Initialize() {
-            Hooks.PostDraw += Draw;
+        protected UserInterfaceItem(UserInterfaceItem parent, Vector2 position) {
+            
         }
+        
+        public abstract AnchorPosition AnchorPosition { get; }
 
-        private void ReleaseUnmanagedResources() {
-            if (Hooks.PostDraw != null) {
-                Hooks.PostDraw -= Draw;
-            }
-        }
-
-        protected virtual void Dispose(bool disposing) {
-            ReleaseUnmanagedResources();
-            if (disposing) {
-            }
-        }
+        public abstract Rectangle Boundaries { get;  }
+        
+        public int Padding { get; }
 
         public void Dispose() {
             Dispose(true);
@@ -37,6 +26,24 @@ namespace Gameiki.Framework {
 
         ~UserInterfaceItem() {
             Dispose(false);
+        }
+
+        public abstract void Draw(object sender, DrawEventArgs args);
+
+        public virtual void Initialize() {
+            Hooks.PostDraw += Draw;
+        }
+
+        protected virtual void Dispose(bool disposing) {
+            ReleaseUnmanagedResources();
+            if (disposing) {
+            }
+        }
+
+        private void ReleaseUnmanagedResources() {
+            if (Hooks.PostDraw != null) {
+                Hooks.PostDraw -= Draw;
+            }
         }
     }
 }
