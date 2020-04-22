@@ -55,7 +55,8 @@ namespace Gameiki.Framework {
         private static void Godmode() {
             var session = Gameiki.MyPlayer.GetData<Session>("session");
             session.IsGodmode = !session.IsGodmode;
-            Main.NewText($"Godmode is now {(session.IsGodmode ? "on" : "off")}.");
+            Gameiki.MyPlayer.SendGameikiMessage(
+                $"Godmode is now {(session.IsGodmode ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
         }
 
         private static void RevealMap() {
@@ -68,10 +69,13 @@ namespace Gameiki.Framework {
 
                 Main.refreshMap = true;
             });
+            
+            Gameiki.MyPlayer.SendGameikiMessage(GameikiUtils.GetColoredString("The map is now revealed.", Color.LimeGreen));
         }
 
         private static void SetTime() {
             GameikiUtils.SetTime(12, 0);
+            Gameiki.MyPlayer.SendGameikiMessage(GameikiUtils.GetColoredString("Time set to 12:00", Color.Yellow));
         }
 
         public void Initialize() {

@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Gameiki {
     internal static class GameikiUtils {
@@ -16,6 +17,10 @@ namespace Gameiki {
                 Main.dayTime = true;
                 Main.time = (double) (time * 3600.0m);
             }
+        }
+
+        public static string GetColoredString(string message, Color color) {
+            return $"[c/{color.Hex3()}:{message}]";
         }
     }
 }

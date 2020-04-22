@@ -8,9 +8,6 @@ using Terraria;
 
 namespace Gameiki {
     internal sealed class Gameiki {
-        private MouseState _currentMouseState;
-        private MouseState _previousMouseState;
-
         public Gameiki() {
             Hooks.GameInitialized += OnGameInitialized;
             Hooks.PostUpdate += OnPostUpdate;
@@ -79,8 +76,7 @@ namespace Gameiki {
         }
 
         private void OnPostUpdate(object sender, EventArgs e) {
-            if (Main.mapFullscreen && _currentMouseState.RightButton == ButtonState.Released &&
-                _previousMouseState.RightButton == ButtonState.Pressed) {
+            if (Main.mapFullscreen && Main.mouseRight && Main.mouseRightRelease) {
                 var targetLocation = new Vector2(
                     Main.mapFullscreenPos.X + (Main.mouseX - Main.screenWidth / 2) * 0.06255F *
                     (16 / Main.mapFullscreenScale),
@@ -88,9 +84,6 @@ namespace Gameiki {
                     (16 / Main.mapFullscreenScale));
                 Main.player[Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
             }
-
-            _previousMouseState = _currentMouseState;
-            _currentMouseState = Mouse.GetState();
         }
     }
 }

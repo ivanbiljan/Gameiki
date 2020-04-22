@@ -1,4 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace Gameiki.Extensions {
@@ -9,6 +11,15 @@ namespace Gameiki.Extensions {
 
         public static void SetData<T>(this Player player, string name, T obj) {
             Properties[name] = obj;
+        }
+
+        public static void SendGameikiMessage(this Player player, string message, Color color = default) {
+            if (color == default) {
+                Main.NewText($"[Gameiki] {message}");
+            }
+            else {
+                Main.NewText($"[Gameiki] {message}", color.R, color.G, color.B);
+            }
         }
     }
 }
