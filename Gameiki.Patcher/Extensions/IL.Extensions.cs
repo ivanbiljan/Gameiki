@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
@@ -9,6 +10,23 @@ namespace Gameiki.Patcher.Extensions {
     ///     Defines extension methods for various Cecil types.
     /// </summary>
     public static class ILExtensions {
+        private static readonly Dictionary<OpCode, OpCode> BranchMap = new Dictionary<OpCode, OpCode> {
+            {OpCodes.Beq_S, OpCodes.Beq},
+            {OpCodes.Bge_S, OpCodes.Bge},
+            {OpCodes.Bge_Un_S, OpCodes.Bge_Un},
+            {OpCodes.Bgt_S, OpCodes.Bgt},
+            {OpCodes.Bgt_Un_S, OpCodes.Bgt_Un},
+            {OpCodes.Ble_S, OpCodes.Ble},
+            {OpCodes.Ble_Un_S, OpCodes.Ble_Un},
+            {OpCodes.Blt_S, OpCodes.Blt},
+            {OpCodes.Blt_Un_S, OpCodes.Blt_Un},
+            {OpCodes.Bne_Un_S, OpCodes.Bne_Un},
+            {OpCodes.Br_S, OpCodes.Br},
+            {OpCodes.Brfalse_S, OpCodes.Brfalse},
+            {OpCodes.Brtrue_S, OpCodes.Brtrue},
+            {OpCodes.Leave_S, OpCodes.Leave}
+        };
+
         /// <summary>
         ///     Injects the specified instruction range after the provided target instruction.
         /// </summary>
@@ -70,11 +88,43 @@ namespace Gameiki.Patcher.Extensions {
                 throw new ArgumentNullException(nameof(instructions));
             }
 
-            var retInstructions = methodDefinition.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToArray();
+            for (var i = methodDefinition.Body.Instructions.Count - 1; i >= 0; --i) {
+                var currentInstruction = methodDefinition.Body.Instructions[i];
+                if (currentInstruction.OpCode != OpCodes.Ret) {
+                    continue;
+                }
 
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (var i = 0; i < retInstructions.Length; ++i) {
-                InsertAfter(methodDefinition, retInstructions[i].Previous, instructions);
+                /*
+                 * Scopes are a bit tricky to deal with in IL when branching is incorporated
+                 * consider the following example:
+                 * if (expression) {
+                 *     ret call
+                 * } else if (expression2) {
+                 *     ret call
+                 * } else {
+                 * }
+                 * ret call
+                 *
+                 * The else statement will attempt to branch to the final ret call.
+                 * If we were to insert more instructions they would fall into the scope of that particular else block
+                 * As a result, we have to cancel out the ret call and inject the logic we wish to execute, after which comes the final ret instruction
+                 */
+                currentInstruction.OpCode = OpCodes.Nop;
+                InsertAfter(methodDefinition, currentInstruction, Instruction.Create(OpCodes.Ret));
+                foreach (var instruction in instructions.Reverse()) {
+                    InsertAfter(methodDefinition, currentInstruction, instruction);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Replaces short form branching instructions with their corresponding long equivalent.
+        /// </summary>
+        /// <param name="methodDefinition">The method definition.</param>
+        public static void ReplaceShortBranches(this MethodDefinition methodDefinition) {
+            foreach (var instruction in methodDefinition.Body.Instructions.Where(
+                i => i.OpCode.OperandType == OperandType.ShortInlineBrTarget)) {
+                instruction.OpCode = BranchMap[instruction.OpCode];
             }
         }
     }

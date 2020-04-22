@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using Gameiki.Extensions;
 using Gameiki.Framework;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
@@ -10,42 +8,77 @@ using Terraria;
 
 namespace Gameiki {
     internal sealed class Gameiki {
-        private readonly ISet<UserInterfaceItem> _uiItems = new HashSet<UserInterfaceItem>();
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
-        public static Player MyPlayer => Main.player[Main.myPlayer];
-
         public Gameiki() {
-            Hooks.GameInitialized += GameInitialized;
-            Hooks.PostDraw += PostDraw;
-            Hooks.PostUpdate += PostUpdate;
+            Hooks.GameInitialized += OnGameInitialized;
+            Hooks.PostUpdate += OnPostUpdate;
+            Hooks.ResetEffects += OnResetPlayerEffects;
         }
+
+        public static Player MyPlayer => Main.player[Main.myPlayer];
 
         // ReSharper disable once MemberCanBeMadeStatic.Global
         public void Run(string[] args) {
             Terraria.Program.LaunchGame(args);
         }
 
-        private void GameInitialized(object sender, EventArgs e) {
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(UserInterfaceItem)))) {
-                _uiItems.Add((UserInterfaceItem) Activator.CreateInstance(type));
-            }
-
+        private void OnGameInitialized(object sender, EventArgs e) {
             Main.versionNumber += "\nGameiki Remaster v1.0. Powered by Mono.Cecil";
+
+            // Setup
+            MyPlayer.SetData("session", new Session());
+
+            // Initialize the GUI
+            Toolbar.Instance.Initialize();
         }
 
-        private void PostDraw(object sender, DrawEventArgs e) {
-            Main.spriteBatch.Begin();
-            foreach (var item in _uiItems) {
-                item.Draw(sender, e);
+        private void OnResetPlayerEffects(object sender, EventArgs e) {
+            var session = MyPlayer.GetData<Session>("session");
+            if (!session.IsGodmode) {
+                return;
             }
 
-            Main.spriteBatch.End();
+            // Max breath
+            MyPlayer.breath = MyPlayer.breathMax - 1;
+
+            // Infinite range
+            Player.tileRangeX = Main.maxTilesX;
+            Player.tileRangeY = Main.maxTilesY;
+
+            // Max hp/mana stats
+            MyPlayer.statLife = MyPlayer.statLifeMax2;
+            MyPlayer.statMana = MyPlayer.statManaMax2;
+
+            // Infinite wing time
+            MyPlayer.carpetTime = MyPlayer.rocketTime = 2;
+            MyPlayer.wingTime = 2;
+
+            // Cellphone
+            MyPlayer.accCompass = 1;
+            MyPlayer.accDepthMeter = 1;
+            MyPlayer.accWatch = 3;
+            MyPlayer.accFishFinder = true;
+            MyPlayer.accWeatherRadio = true;
+            MyPlayer.accCalendar = true;
+            MyPlayer.accThirdEye = true;
+            MyPlayer.accJarOfSouls = true;
+            MyPlayer.accCritterGuide = true;
+            MyPlayer.accStopwatch = true;
+            MyPlayer.accOreFinder = true;
+            MyPlayer.accDreamCatcher = true;
+
+            // Builder accessory
+            MyPlayer.InfoAccMechShowWires = true;
+
+            // Debuff immunity
+            for (var i = 0; i < MyPlayer.buffImmune.Length; ++i) {
+                MyPlayer.buffImmune[i] = true;
+            }
         }
 
-        private void PostUpdate(object sender, EventArgs e) {
+        private void OnPostUpdate(object sender, EventArgs e) {
             if (Main.mapFullscreen && _currentMouseState.RightButton == ButtonState.Released &&
                 _previousMouseState.RightButton == ButtonState.Pressed) {
                 var targetLocation = new Vector2(

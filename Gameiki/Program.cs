@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace Gameiki {
     internal static class Program {
@@ -31,6 +32,10 @@ namespace Gameiki {
             }
         }
 
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+            MessageBox.Show(e.ExceptionObject.ToString());
+        }
+
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
@@ -38,6 +43,7 @@ namespace Gameiki {
         private static void Main() {
             // Handle assembly resolution
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             // Run Terraria
             var gameiki = new Gameiki();

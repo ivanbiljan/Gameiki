@@ -60,13 +60,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\DoUpdateModification.cs" />
+    <Compile Include="Cecil\DrawCursorModification.cs" />
     <Compile Include="Cecil\DrawModification.cs" />
     <Compile Include="Cecil\IModification.cs" />
     <Compile Include="Cecil\InitializeModification.cs" />
+    <Compile Include="Cecil\LegacyGameInterfaceLayerModification.cs" />
+    <Compile Include="Cecil\PlayerUpdateModification.cs" />
     <Compile Include="Cecil\PrivateMembersToPublic.cs" />
+    <Compile Include="Cecil\ResetEffectsModification.cs" />
     <Compile Include="Cecil\SteamInitializeModification.cs" />
     <Compile Include="Events\DrawEventArgs.cs" />
     <Compile Include="Events\Hooks.cs" />
+    <Compile Include="Events\InterfaceLayerDrawEventArgs.cs" />
     <Compile Include="Extensions\IL.Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

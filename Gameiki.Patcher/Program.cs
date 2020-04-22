@@ -33,7 +33,7 @@ namespace Gameiki.Patcher {
             Console.WriteLine("Writing to file...");
             using (var stream = new MemoryStream()) {
                 terraria.Write(stream);
-                File.WriteAllBytes("patched.exe", stream.ToArray());
+                File.WriteAllBytes("./../../../refs/patched.exe", stream.ToArray());
             }
 
             Console.WriteLine("> Done");
