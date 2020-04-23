@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ namespace Gameiki.Framework {
     /// <summary>
     ///     Represents a button control.
     /// </summary>
-    public sealed class Button : Control {
+    public class Button : Control {
         private readonly Action _callback;
         private readonly string _text;
         private Texture2D _pointerTexture;
@@ -20,7 +21,7 @@ namespace Gameiki.Framework {
 
         public Button(int x, int y, int width, int height, string text = null, Action callback = null) : base(x, y, width, height) {
             _text = text;
-            _callback = _callback;
+            _callback = callback;
         }
 
         public override void Initialize() {
@@ -28,9 +29,14 @@ namespace Gameiki.Framework {
 
             // Setup hooks
             Hooks.PreCursorDraw += OnPreCursorDraw;
+            MouseClick += OnMouseClick;
 
             // Setup everything else
             _pointerTexture = Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Cursor\\cursornew");
+        }
+
+        private void OnMouseClick(object sender, EventArgs e) {
+            _callback?.Invoke();
         }
 
         private void OnPreCursorDraw(object sender, HandledEventArgs args) {
@@ -42,7 +48,7 @@ namespace Gameiki.Framework {
             if (!IsHoveredOver()) {
                 return;
             }
-
+            
             Main.spriteBatch.Draw(_pointerTexture, new Vector2(Main.mouseX - 12, Main.mouseY + 5), new Rectangle?(), Color.White, 0f,
                 new Vector2(0.1f) * _pointerTexture.Size(), Main.cursorScale * 1.1f, SpriteEffects.None, 0.0f);
             Main.spriteBatch.DrawString(Main.fontMouseText, _text,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -44,7 +45,7 @@ namespace Gameiki.Framework {
         /// <summary>
         ///     Gets the dimensions.
         /// </summary>
-        public Vector2 Dimensions { get; set; }
+        public Vector2 Dimensions { get; private set; }
 
         /// <summary>
         ///     Gets the padding.
@@ -59,7 +60,7 @@ namespace Gameiki.Framework {
         /// <summary>
         ///     Gets the position relative to the control's parent.
         /// </summary>
-        public Vector2 Position { get; }
+        public Vector2 Position { get; private set; }
 
         public void Dispose() {
             Dispose(true);
@@ -117,25 +118,29 @@ namespace Gameiki.Framework {
         /// <param name="sender">The sender, which is <c>null</c>.</param>
         /// <param name="args">The event data.</param>
         protected virtual void OnPostUpdate(object sender, EventArgs args) {
-            _previousMouseState = _currentMouseState;
-            _currentMouseState = Mouse.GetState();
-
             if (!IsHoveredOver()) {
-                if (_wasHovered) {
-                    MouseLeave?.Invoke(null, EventArgs.Empty);
-                    _wasHovered = false;
+                if (!_wasHovered) {
+                    return;
                 }
-            }
 
+                MouseLeave?.Invoke(null, EventArgs.Empty);
+                _wasHovered = false;
+                return;
+            }
+            
             if (!_wasHovered) {
                 MouseEnter?.Invoke(null, EventArgs.Empty);
                 _wasHovered = true;
             }
+            //
+            // if (IsMouseDown()) {
+            //     MouseDown?.Invoke(null, EventArgs.Empty);
+            // }
+            // else if (IsMouseClick()) {
+            //     MouseClick?.Invoke(null, EventArgs.Empty);
+            // }
 
-            if (IsMouseDown()) {
-                MouseDown?.Invoke(null, EventArgs.Empty);
-            }
-            else if (IsMouseClick()) {
+            if (Main.mouseLeft && Main.mouseLeftRelease) {
                 MouseClick?.Invoke(null, EventArgs.Empty);
             }
 
@@ -143,6 +148,10 @@ namespace Gameiki.Framework {
             foreach (var child in Children) {
                 child.OnPostUpdate(sender, args);
             }
+        }
+
+        public void SetPosition(float x, float y) {
+            Position = new Vector2(x, y);
         }
 
         private void ReleaseUnmanagedResources() {

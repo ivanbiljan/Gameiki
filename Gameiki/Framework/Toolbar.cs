@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Gameiki.Extensions;
@@ -44,10 +45,17 @@ namespace Gameiki.Framework {
         };
 
         private Texture2D _pointerTexture;
+        private Button _toggleButton;
+        private bool _visible = true;
 
         private Toolbar() {
             var width = _items.Sum(i => (int) Math.Ceiling(i.Texture.Width * i.ScaleOverride) + 20) + 25;
             _boundaries = new Rectangle(Main.screenWidth / 2 - width / 2, Main.screenHeight - 45, width, 45);
+
+            var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
+            _toggleButton = new Button(Main.screenWidth / 2 - (int) (toggleTextSize.X + 10) / 2,
+                Main.screenHeight - 45 - (int) (toggleTextSize.Y + 10), (int) toggleTextSize.X + 10, (int) toggleTextSize.Y + 10,
+                "Toggle", ToggleHotbar);
         }
 
         public static Toolbar Instance => _instance ?? (_instance = new Toolbar());
@@ -80,10 +88,16 @@ namespace Gameiki.Framework {
 
         public void Initialize() {
             _pointerTexture = Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Cursor\\cursornew");
+            _toggleButton.Initialize();
+            
             Hooks.PreCursorDraw += OnPreCursorDraw;
         }
 
         private void OnPreCursorDraw(object sender, HandledEventArgs args) {
+            if (!_visible) {
+                return;
+            }
+            
             Utils.DrawInvBG(Main.spriteBatch, _boundaries);
 
             var offset = 0;
@@ -117,6 +131,17 @@ namespace Gameiki.Framework {
 
             if (!string.IsNullOrWhiteSpace(cursorText)) {
                 Main.instance.MouseText(cursorText);
+            }
+        }
+
+        private void ToggleHotbar() {
+            _visible = !_visible;
+            if (!_visible) {
+                _toggleButton.SetPosition(_toggleButton.Position.X, Main.screenHeight - _toggleButton.Dimensions.Y);
+            }
+            else {
+                var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
+                _toggleButton.SetPosition(_toggleButton.Position.X, Main.screenHeight - 45 - (int) (toggleTextSize.Y + 10));
             }
         }
     }
