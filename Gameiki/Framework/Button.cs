@@ -48,7 +48,8 @@ namespace Gameiki.Framework {
             if (!IsHoveredOver()) {
                 return;
             }
-            
+
+            Gameiki.MyPlayer.mouseInterface = true;
             Main.spriteBatch.Draw(_pointerTexture, new Vector2(Main.mouseX - 12, Main.mouseY + 5), new Rectangle?(), Color.White, 0f,
                 new Vector2(0.1f) * _pointerTexture.Size(), Main.cursorScale * 1.1f, SpriteEffects.None, 0.0f);
             Main.spriteBatch.DrawString(Main.fontMouseText, _text,

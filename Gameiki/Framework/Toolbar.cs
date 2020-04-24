@@ -89,7 +89,7 @@ namespace Gameiki.Framework {
         public void Initialize() {
             _pointerTexture = Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Cursor\\cursornew");
             _toggleButton.Initialize();
-            
+
             Hooks.PreCursorDraw += OnPreCursorDraw;
         }
 
@@ -114,6 +114,8 @@ namespace Gameiki.Framework {
                     Main.spriteBatch.Draw(_pointerTexture, new Vector2(Main.mouseX - 12, Main.mouseY + 5), new Rectangle?(), Color.White,
                         0f,
                         new Vector2(0.1f) * _pointerTexture.Size(), Main.cursorScale * 1.1f, SpriteEffects.None, 0.0f);
+
+                    Gameiki.MyPlayer.mouseInterface = true;
                     if (Main.mouseLeft && Main.mouseLeftRelease) {
                         item.Callback();
                     }

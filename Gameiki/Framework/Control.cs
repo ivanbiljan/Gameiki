@@ -45,7 +45,7 @@ namespace Gameiki.Framework {
         /// <summary>
         ///     Gets the dimensions.
         /// </summary>
-        public Vector2 Dimensions { get; private set; }
+        public Vector2 Dimensions { get; protected set; }
 
         /// <summary>
         ///     Gets the padding.
@@ -127,7 +127,8 @@ namespace Gameiki.Framework {
                 _wasHovered = false;
                 return;
             }
-            
+
+            Gameiki.MyPlayer.mouseInterface = true;
             if (!_wasHovered) {
                 MouseEnter?.Invoke(null, EventArgs.Empty);
                 _wasHovered = true;
