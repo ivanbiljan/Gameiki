@@ -72,8 +72,8 @@ namespace Gameiki.Framework {
         }
 
         public virtual void Initialize() {
-            Hooks.PostCursorDraw += OnPostCursorDraw;
-            Hooks.PostUpdate += OnPostUpdate;
+            Patcher.Events.Hooks.PostCursorDraw += OnPostCursorDraw;
+            Patcher.Events.Hooks.PostUpdate += OnPostUpdate;
         }
 
         /// <summary>
@@ -156,8 +156,8 @@ namespace Gameiki.Framework {
         }
 
         private void ReleaseUnmanagedResources() {
-            Hooks.PostCursorDraw -= OnPostCursorDraw;
-            Hooks.PostUpdate -= OnPostUpdate;
+            Patcher.Events.Hooks.PostCursorDraw -= OnPostCursorDraw;
+            Patcher.Events.Hooks.PostUpdate -= OnPostUpdate;
         }
     }
 }

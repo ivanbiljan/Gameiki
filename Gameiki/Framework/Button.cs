@@ -28,7 +28,7 @@ namespace Gameiki.Framework {
             base.Initialize();
 
             // Setup hooks
-            Hooks.PreCursorDraw += OnPreCursorDraw;
+            Patcher.Events.Hooks.PreCursorDraw += OnPreCursorDraw;
             MouseClick += OnMouseClick;
 
             // Setup everything else

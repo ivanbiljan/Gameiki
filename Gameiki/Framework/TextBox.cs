@@ -24,7 +24,7 @@ namespace Gameiki.Framework {
             _generalTexture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
             _generalTexture.SetData(new[] {Color.White});
             
-            Hooks.PreCursorDraw += OnPreCursorDraw;
+            Patcher.Events.Hooks.PreCursorDraw += OnPreCursorDraw;
             MouseClick += OnMouseClick;
         }
 

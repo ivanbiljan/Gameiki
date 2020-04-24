@@ -9,9 +9,9 @@ using Terraria;
 namespace Gameiki {
     internal sealed class Gameiki {
         public Gameiki() {
-            Hooks.GameInitialized += OnGameInitialized;
-            Hooks.PostUpdate += OnPostUpdate;
-            Hooks.ResetEffects += OnResetPlayerEffects;
+            Patcher.Events.Hooks.GameInitialized += OnGameInitialized;
+            Patcher.Events.Hooks.PostUpdate += OnPostUpdate;
+            Patcher.Events.Hooks.ResetEffects += OnResetPlayerEffects;
         }
 
         public static Player MyPlayer => Main.player[Main.myPlayer];
@@ -83,6 +83,23 @@ namespace Gameiki {
                     Main.mapFullscreenPos.Y + (Main.mouseY - Main.screenHeight / 2) * 0.06255F *
                     (16 / Main.mapFullscreenScale));
                 Main.player[Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
+            }
+
+            var session = MyPlayer.GetData<Session>("session");
+            if (!session.IsFullbright) {
+                return;
+            }
+            
+            var tilesX = Main.screenWidth / 16 + Lighting.offScreenTiles * 2;
+            var tilesY = Main.screenHeight / 16 + Lighting.offScreenTiles * 2;
+            for (var i = 0; i < tilesX; ++i)
+            {
+                var lightingStates = Lighting.states[i];
+                for (var j = 0; j < tilesY; ++j)
+                {
+                    var state = lightingStates[j];
+                    state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
+                }
             }
         }
     }

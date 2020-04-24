@@ -8,6 +8,13 @@ namespace Gameiki.Patcher.Cecil {
             }
 
             void MakeTypePublic(TypeDefinition typeDefinition) {
+                if (!typeDefinition.IsNested) {
+                    typeDefinition.IsPublic = true;
+                }
+                else {
+                    typeDefinition.IsNestedPublic = true;
+                }
+                
                 foreach (var @event in typeDefinition.Events) {
                     @event.AddMethod.IsPrivate = false;
                     @event.AddMethod.IsPublic = true;

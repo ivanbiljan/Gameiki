@@ -36,11 +36,13 @@ namespace Gameiki.Framework {
             new ToolbarItem(Main.itemTexture[ItemID.Toolbelt], () => { }, "Accessories"),
             new ToolbarItem(Main.itemTexture[ItemID.AngelWings], () => { }, "Wings"),
             new ToolbarItem(Main.itemTexture[ItemID.TrashCan], () => { }, "Recycle Bin"),
-            new ToolbarItem(Main.mapIconTexture[0], () => RevealMap(), "Map Reveal"),
+            new ToolbarItem(Main.mapIconTexture[0], RevealMap, "Map Reveal"),
             new ToolbarItem(Main.itemTexture[ItemID.Teleporter], () => { }, "Waypoints"),
-            new ToolbarItem(Main.sun3Texture, () => SetTime(), "Noon"),
+            new ToolbarItem(Main.sun3Texture, SetTime, "Noon"),
             new ToolbarItem(Main.npcHeadTexture[2], () => { }, "Town NPCs"),
-            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\godmode"), () => Godmode(), "Godmode")
+            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\music"),
+                () => Fullbright(), "Plays music"),
+            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\godmode"), Godmode, "Godmode")
                 {ScaleOverride = 0.5f}
         };
 
@@ -49,7 +51,7 @@ namespace Gameiki.Framework {
         private bool _visible = true;
 
         private Toolbar() {
-            var width = _items.Sum(i => (int) Math.Ceiling(i.Texture.Width * i.ScaleOverride) + 20) + 25;
+            var width = (int) _items.Sum(i => i.Texture.Width * i.ScaleOverride + 20) + 25;
             _boundaries = new Rectangle(Main.screenWidth / 2 - width / 2, Main.screenHeight - 45, width, 45);
 
             var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
@@ -65,6 +67,13 @@ namespace Gameiki.Framework {
             session.IsGodmode = !session.IsGodmode;
             Gameiki.MyPlayer.SendGameikiMessage(
                 $"Godmode is now {(session.IsGodmode ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
+        }
+
+        private static void Fullbright() {
+            var session = Gameiki.MyPlayer.GetData<Session>("session");
+            session.IsFullbright = !session.IsFullbright;
+            Gameiki.MyPlayer.SendGameikiMessage(
+                $"Fullbright is now {(session.IsFullbright ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
         }
 
         private static void RevealMap() {
