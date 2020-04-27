@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Gameiki.Extensions;
 using Microsoft.Xna.Framework.Media;
 using static Gameiki.GameikiUtils;
 
@@ -43,7 +44,9 @@ namespace Gameiki {
                 }
             
                 var songs = Directory.GetFiles(SongDirectory).Where(f => f.EndsWith(".mp3")).ToArray();
-                _currentSong = Song.FromUri("Hello", new Uri(songs[GetRandom(songs.Length)], UriKind.RelativeOrAbsolute));
+                var randomSongPath = songs[GameikiUtils.GetRandom(songs.Length)];
+                _currentSong = Song.FromUri(Path.GetFileNameWithoutExtension(randomSongPath),
+                    new Uri(randomSongPath, UriKind.RelativeOrAbsolute));
                 MediaPlayer.Play(_currentSong);
             });
         }
@@ -53,7 +56,14 @@ namespace Gameiki {
         }
 
         public void PlayShuffled() {
-            
+            var songs = Directory.GetFiles(SongDirectory).Where(f => f.EndsWith(".mp3")).ToList();
+            songs.Shuffle();
+            foreach (var songPath in songs) {
+                _queue.Add(Song.FromUri(Path.GetFileNameWithoutExtension(songPath), new Uri(songPath, UriKind.Relative)));
+            }
+
+            _currentSong = _queue[0];
+            MediaPlayer.Play(_currentSong);
         }
     }
 }

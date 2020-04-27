@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\IList.Extensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Framework\AnchorPosition.cs" />
     <Compile Include="Framework\Button.cs" />
