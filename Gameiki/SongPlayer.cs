@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Gameiki.Extensions;
+using Gameiki.Patcher.Events;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
+using ReLogic.Graphics;
+using Terraria;
 using static Gameiki.GameikiUtils;
 
 namespace Gameiki {
@@ -16,6 +21,18 @@ namespace Gameiki {
 
         private SongPlayer() {
             MediaPlayer.MediaStateChanged += MediaPlayerOnMediaStateChanged;
+            Hooks.PreCursorDraw += OnPreCursorDraw;
+        }
+
+        private void OnPreCursorDraw(object sender, HandledEventArgs e) {
+            if (!IsPlaying) {
+                return;
+            }
+
+            var displayString = $"Now playing: '{_currentSong.Name}'";
+            Main.spriteBatch.DrawString(Main.fontMouseText, displayString,
+                new Vector2((float) (628 - Main.fontMouseText.MeasureString(displayString).X * 0.5) + (Main.screenWidth - 800),
+                    Main.screenHeight - 84), Color.White);
         }
 
         private void MediaPlayerOnMediaStateChanged(object sender, EventArgs e) {
