@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Security.Cryptography;
+using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace Gameiki {
@@ -21,6 +23,14 @@ namespace Gameiki {
 
         public static string GetColoredString(string message, Color color) {
             return $"[c/{color.Hex3()}:{message}]";
+        }
+
+        public static int GetRandom(int max) {
+            var bytes = new byte[4]; 
+            using (var cryptoProvider = new RNGCryptoServiceProvider()) {
+                cryptoProvider.GetBytes(bytes);
+                return (int) (BitConverter.ToUInt32(bytes, 0) % max);
+            }
         }
     }
 }

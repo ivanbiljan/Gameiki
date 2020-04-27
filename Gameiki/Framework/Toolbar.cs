@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Gameiki.Extensions;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using Terraria;
 using Terraria.ID;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Gameiki.Framework {
     internal sealed class ToolbarItem {
@@ -36,12 +41,13 @@ namespace Gameiki.Framework {
             new ToolbarItem(Main.itemTexture[ItemID.Toolbelt], () => { }, "Accessories"),
             new ToolbarItem(Main.itemTexture[ItemID.AngelWings], () => { }, "Wings"),
             new ToolbarItem(Main.itemTexture[ItemID.TrashCan], () => { }, "Recycle Bin"),
-            new ToolbarItem(Main.mapIconTexture[0], RevealMap, "Map Reveal"),
+            new ToolbarItem(Main.mapIconTexture[0], () => RevealMap(), "Map Reveal"),
             new ToolbarItem(Main.itemTexture[ItemID.Teleporter], () => { }, "Waypoints"),
             new ToolbarItem(Main.sun3Texture, SetTime, "Noon"),
             new ToolbarItem(Main.npcHeadTexture[2], () => { }, "Town NPCs"),
             new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\music"),
-                () => Fullbright(), "Plays music"),
+                () => PlayMusic(), "Plays music"),
+            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\flashlight"), Fullbright, "Fullbright") {ScaleOverride = 0.6f},
             new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\godmode"), Godmode, "Godmode")
                 {ScaleOverride = 0.5f}
         };
@@ -51,13 +57,14 @@ namespace Gameiki.Framework {
         private bool _visible = true;
 
         private Toolbar() {
-            var width = (int) _items.Sum(i => i.Texture.Width * i.ScaleOverride + 20) + 25;
+            var width = (int) _items.Sum(i => i.Texture.Width * i.ScaleOverride + 20);
             _boundaries = new Rectangle(Main.screenWidth / 2 - width / 2, Main.screenHeight - 45, width, 45);
 
             var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
-            _toggleButton = new Button(Main.screenWidth / 2 - (int) (toggleTextSize.X + 10) / 2,
-                Main.screenHeight - 45 - (int) (toggleTextSize.Y + 10), (int) toggleTextSize.X + 10, (int) toggleTextSize.Y + 10,
+            _toggleButton = new Button(Main.screenWidth / 2 - (int) (toggleTextSize.X + 16) / 2,
+                Main.screenHeight - 45 - (int) (toggleTextSize.Y + 16), (int) toggleTextSize.X + 16, (int) toggleTextSize.Y + 16,
                 "Toggle", ToggleHotbar);
+            new TextBox(150, 150, 200, 50).Initialize();
         }
 
         public static Toolbar Instance => _instance ?? (_instance = new Toolbar());
@@ -77,16 +84,16 @@ namespace Gameiki.Framework {
         }
 
         private static void RevealMap() {
-            Task.Factory.StartNew(() => {
+            new TaskFactory().StartNew(() => {
                 for (var x = 0; x < Main.Map.MaxWidth; ++x) {
                     for (var y = 0; y < Main.Map.MaxHeight; ++y) {
                         Main.Map.UpdateLighting(x, y, 255);
                     }
                 }
-
+                
                 Main.refreshMap = true;
             });
-            
+
             Gameiki.MyPlayer.SendGameikiMessage(GameikiUtils.GetColoredString("The map is now revealed.", Color.LimeGreen));
         }
 
@@ -137,7 +144,7 @@ namespace Gameiki.Framework {
                         SpriteEffects.None, 0);
                 }
 
-                offset += item.Texture.Width + 20; // Give everything a 20 pixel margin
+                offset += (int) (item.Texture.Width * item.ScaleOverride) + 20; // Give everything a 20 pixel margin
             }
 
             if (!string.IsNullOrWhiteSpace(cursorText)) {
@@ -154,6 +161,10 @@ namespace Gameiki.Framework {
                 var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
                 _toggleButton.SetPosition(_toggleButton.Position.X, Main.screenHeight - 45 - (int) (toggleTextSize.Y + 10));
             }
+        }
+
+        private static void PlayMusic() {
+            SongPlayer.Instance.PlayRandom();
         }
     }
 }

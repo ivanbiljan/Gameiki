@@ -14,6 +14,8 @@ namespace Gameiki.Framework {
     /// </summary>
     public class TextBox : Control {
         private Texture2D _generalTexture;
+        private bool _isCursorBlinking;
+        private int _mouseBlinkCounter;
 
         public TextBox(int x, int y, int width, int height) : base(x, y, width, height) {
         }
@@ -24,7 +26,7 @@ namespace Gameiki.Framework {
             _generalTexture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
             _generalTexture.SetData(new[] {Color.White});
             
-            Patcher.Events.Hooks.PreCursorDraw += OnPreCursorDraw;
+            Hooks.PreCursorDraw += OnPreCursorDraw;
             MouseClick += OnMouseClick;
         }
 
@@ -34,20 +36,28 @@ namespace Gameiki.Framework {
 
         private void OnPreCursorDraw(object sender, HandledEventArgs e) {
             Main.spriteBatch.Draw(_generalTexture, Position, new Rectangle(0, 0, (int) Dimensions.X, (int) Dimensions.Y), Color.White);
-            if (!HasFocus && string.IsNullOrWhiteSpace(Text)) {
-                Main.spriteBatch.DrawString(Main.fontMouseText, PlaceholderText, new Vector2(Position.X + 3, Position.Y + 3),
-                    Color.Black * 0.2f);
+            if (!HasFocus) {
+                if (string.IsNullOrWhiteSpace(Text)) {
+                    Main.spriteBatch.DrawString(Main.fontMouseText, PlaceholderText, new Vector2(Position.X + 3, Position.Y + 3),
+                        Color.Black * 0.2f);
+                }
             }
             else {
                 Text = Main.GetInputText(Text);
                 if (Main.inputTextEscape) {
                     HasFocus = false;
-                    Text = string.Empty;
+                    //Text = string.Empty;
+                }
+
+                if (_mouseBlinkCounter++ == 20) {
+                    _mouseBlinkCounter = 0;
+                    _isCursorBlinking = !_isCursorBlinking;
                 }
                 
-                PlayerInput.WritingText = true;
+                PlayerInput.WritingText = HasFocus;
                 Main.instance.HandleIME();
-                Main.spriteBatch.DrawString(Main.fontMouseText, Text, new Vector2(Position.X + 3, Position.Y + 3), Color.Black);
+                Main.spriteBatch.DrawString(Main.fontMouseText, $"{Text}{(_isCursorBlinking ? "|" : string.Empty)}",
+                    new Vector2(Position.X + 3, Position.Y + 3), Color.Black);
             }
         }
 
