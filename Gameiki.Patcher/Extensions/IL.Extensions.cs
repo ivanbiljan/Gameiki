@@ -127,5 +127,52 @@ namespace Gameiki.Patcher.Extensions {
                 instruction.OpCode = BranchMap[instruction.OpCode];
             }
         }
+
+        /// <summary>
+        ///     Removes the specified instruction range starting from the specified index.
+        /// </summary>
+        /// <param name="methodDefinition">The method definition.</param>
+        /// <param name="startIndex">The index of the first instruction to remove.</param>
+        /// <param name="numberOfInstructions">The number of instructions to remove.</param>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex" /> is out of range.</exception>
+        public static void RemoveInstructionRange(this MethodDefinition methodDefinition, int startIndex,
+            int numberOfInstructions) {
+            if (startIndex < 0 || startIndex > methodDefinition.Body.Instructions.Count - 1) {
+                throw new IndexOutOfRangeException(nameof(startIndex));
+            }
+
+            for (var i = startIndex; i < startIndex + numberOfInstructions; ++i) {
+                methodDefinition.Body.Instructions.RemoveAt(startIndex);
+            }
+        }
+
+        /// <summary>
+        ///     Scans the method definition for the specified instruction pattern and returns the index
+        ///     of the first instruction in the pattern.
+        /// </summary>
+        /// <param name="methodDefinition">The method definition.</param>
+        /// <param name="opCodes">The instructions, which must not be <c>null</c>.</param>
+        /// <returns>The index of the first instruction in the pattern, or -1 if the pattern has no match.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="opCodes" /> is <c>null</c>.</exception>
+        public static int ScanInstructionPattern(this MethodDefinition methodDefinition,
+            [NotNull] params OpCode[] opCodes) {
+            if (opCodes == null) {
+                throw new ArgumentNullException(nameof(opCodes));
+            }
+
+            for (var i = 0; i < methodDefinition.Body.Instructions.Count; ++i) {
+                var instruction = methodDefinition.Body.Instructions[i];
+                if (instruction.OpCode != opCodes[0]) {
+                    continue;
+                }
+
+                if (opCodes.TakeWhile((oc, ix) => methodDefinition.Body.Instructions[i + ix].OpCode == oc)
+                    .SequenceEqual(opCodes)) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
     }
 }

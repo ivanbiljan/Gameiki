@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using ReLogic.Graphics;
 using Terraria;
-using static Gameiki.GameikiUtils;
 
 namespace Gameiki {
     internal sealed class SongPlayer {

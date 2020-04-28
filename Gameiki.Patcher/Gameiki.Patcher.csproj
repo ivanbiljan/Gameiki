@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cecil\ChatModification.cs" />
     <Compile Include="Cecil\DoUpdateModification.cs" />
     <Compile Include="Cecil\DrawCursorModification.cs" />
     <Compile Include="Cecil\DrawModification.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Cecil\PrivateMembersToPublic.cs" />
     <Compile Include="Cecil\ResetEffectsModification.cs" />
     <Compile Include="Cecil\SteamInitializeModification.cs" />
+    <Compile Include="Events\ChatEventArgs.cs" />
     <Compile Include="Events\DrawEventArgs.cs" />
     <Compile Include="Events\Hooks.cs" />
     <Compile Include="Events\InterfaceLayerDrawEventArgs.cs" />

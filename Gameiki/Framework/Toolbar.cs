@@ -41,7 +41,7 @@ namespace Gameiki.Framework {
             new ToolbarItem(Main.itemTexture[ItemID.Toolbelt], () => { }, "Accessories"),
             new ToolbarItem(Main.itemTexture[ItemID.AngelWings], () => { }, "Wings"),
             new ToolbarItem(Main.itemTexture[ItemID.TrashCan], () => { }, "Recycle Bin"),
-            new ToolbarItem(Main.mapIconTexture[0], () => RevealMap(), "Map Reveal"),
+            new ToolbarItem(Main.mapIconTexture[0], RevealMap, "Map Reveal"),
             new ToolbarItem(Main.itemTexture[ItemID.Teleporter], () => { }, "Waypoints"),
             new ToolbarItem(Main.sun3Texture, SetTime, "Noon"),
             new ToolbarItem(Main.npcHeadTexture[2], () => { }, "Town NPCs"),
@@ -64,7 +64,6 @@ namespace Gameiki.Framework {
             _toggleButton = new Button(Main.screenWidth / 2 - (int) (toggleTextSize.X + 16) / 2,
                 Main.screenHeight - 45 - (int) (toggleTextSize.Y + 16), (int) toggleTextSize.X + 16, (int) toggleTextSize.Y + 16,
                 "Toggle", ToggleHotbar);
-            new TextBox(150, 150, 200, 50).Initialize();
         }
 
         public static Toolbar Instance => _instance ?? (_instance = new Toolbar());
@@ -164,6 +163,7 @@ namespace Gameiki.Framework {
         }
 
         private static void PlayMusic() {
+            Main.spriteBatch.End();
             SongPlayer.Instance.PlayRandom();
         }
     }

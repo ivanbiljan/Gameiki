@@ -8,6 +8,11 @@ namespace Gameiki.Patcher.Events {
     [PublicAPI]
     public static class Hooks {
         /// <summary>
+        /// Occurs when the player sends a message.
+        /// </summary>
+        public static EventHandler<ChatEventArgs> Chat;
+        
+        /// <summary>
         ///     Occurs after Terraria initializes.
         /// </summary>
         public static EventHandler GameInitialized;
@@ -64,6 +69,12 @@ namespace Gameiki.Patcher.Events {
         ///     Occurs when the player gets his stats reset.
         /// </summary>
         public static event EventHandler ResetEffects;
+
+        internal static bool InvokeChat(string text) {
+            var args = new ChatEventArgs(text);
+            Chat?.Invoke(null, args);
+            return args.Handled;
+        }
 
         internal static void InvokeGameInitialized() {
             GameInitialized?.Invoke(null, EventArgs.Empty);
