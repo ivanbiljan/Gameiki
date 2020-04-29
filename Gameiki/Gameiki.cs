@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using Gameiki.Extensions;
 using Gameiki.Framework;
+using Gameiki.Framework.Commands;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -9,9 +12,24 @@ using Terraria;
 namespace Gameiki {
     internal sealed class Gameiki {
         public Gameiki() {
-            Patcher.Events.Hooks.GameInitialized += OnGameInitialized;
-            Patcher.Events.Hooks.PostUpdate += OnPostUpdate;
-            Patcher.Events.Hooks.ResetEffects += OnResetPlayerEffects;
+            Hooks.Chat += OnChat;
+            Hooks.GameInitialized += OnGameInitialized;
+            Hooks.PostUpdate += OnPostUpdate;
+            Hooks.ResetEffects += OnResetPlayerEffects;
+        }
+
+        private void OnChat(object sender, ChatEventArgs e) {
+            if (!e.Text.StartsWith(".")) {
+                return;
+            }
+
+            try {
+                CommandManager.Instance.RunCommand(e.Text.Substring(1));
+                e.Handled = true;
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         public static Player MyPlayer => Main.player[Main.myPlayer];

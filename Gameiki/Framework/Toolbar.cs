@@ -43,7 +43,7 @@ namespace Gameiki.Framework {
             new ToolbarItem(Main.itemTexture[ItemID.TrashCan], () => { }, "Recycle Bin"),
             new ToolbarItem(Main.mapIconTexture[0], RevealMap, "Map Reveal"),
             new ToolbarItem(Main.itemTexture[ItemID.Teleporter], () => { }, "Waypoints"),
-            new ToolbarItem(Main.sun3Texture, SetTime, "Noon"),
+            new ToolbarItem(Main.sunTexture, SetTime, "Noon") {ScaleOverride = 0.5f},
             new ToolbarItem(Main.npcHeadTexture[2], () => { }, "Town NPCs"),
             new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\music"),
                 () => PlayMusic(), "Plays music"),
@@ -109,7 +109,7 @@ namespace Gameiki.Framework {
         }
 
         private void OnPreCursorDraw(object sender, HandledEventArgs args) {
-            if (!_visible) {
+            if (!_visible || Main.drawingPlayerChat) {
                 return;
             }
             
