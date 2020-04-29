@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gameiki.Extensions;
@@ -15,7 +16,17 @@ namespace Gameiki {
             Hooks.Chat += OnChat;
             Hooks.GameInitialized += OnGameInitialized;
             Hooks.PostUpdate += OnPostUpdate;
+            Hooks.PreHurt += OnPreHurt;
             Hooks.ResetEffects += OnResetPlayerEffects;
+        }
+
+        private void OnPreHurt(object sender, HandledEventArgs e) {
+            var session = MyPlayer.GetData<Session>("session");
+            if (!session.IsGodmode) {
+                return;
+            }
+
+            e.Handled = true;
         }
 
         private void OnChat(object sender, ChatEventArgs e) {
@@ -63,10 +74,10 @@ namespace Gameiki {
             Player.tileRangeY = Main.maxTilesY;
 
             // Max hp/mana stats
-            MyPlayer.statLife = MyPlayer.statLifeMax2;
             MyPlayer.statMana = MyPlayer.statManaMax2;
 
             // Infinite wing time
+            MyPlayer.wings = MyPlayer.wingsLogic = 29; // Solar wings
             MyPlayer.carpetTime = MyPlayer.rocketTime = 2;
             MyPlayer.wingTime = 2;
 

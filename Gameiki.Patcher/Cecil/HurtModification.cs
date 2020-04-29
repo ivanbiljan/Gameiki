@@ -17,8 +17,14 @@ namespace Gameiki.Patcher.Cecil {
 
             hurt.InsertBefore(hurt.Body.Instructions[0],
                 Instruction.Create(OpCodes.Call,
-                    player.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePostHurt),
-                        BindingFlags.NonPublic | BindingFlags.Static))), Instruction.Create(OpCodes.Brfalse_S, hurt.Body.Instructions[0]));
+                    player.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePreHurt),
+                        BindingFlags.NonPublic | BindingFlags.Static))), Instruction.Create(OpCodes.Brfalse_S, hurt.Body.Instructions[0]),
+                Instruction.Create(OpCodes.Ldc_R8, 0.0D),
+                Instruction.Create(OpCodes.Ret));
+            hurt.InjectEnds(Instruction.Create(OpCodes.Call,
+                player.Module.ImportReference(typeof(Hooks).GetMethod(nameof(Hooks.InvokePostHurt),
+                    BindingFlags.NonPublic | BindingFlags.Static))));
+            hurt.ReplaceShortBranches();
         }
     }
 }
