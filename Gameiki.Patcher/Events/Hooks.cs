@@ -8,6 +8,16 @@ namespace Gameiki.Patcher.Events {
     [PublicAPI]
     public static class Hooks {
         /// <summary>
+        /// Occurs before the player is hurt.
+        /// </summary>
+        public static EventHandler<HandledEventArgs> PreHurt;
+
+        /// <summary>
+        /// Occurs after the player is hurt.
+        /// </summary>
+        public static EventHandler PostHurt;
+        
+        /// <summary>
         /// Occurs when the player sends a message.
         /// </summary>
         public static EventHandler<ChatEventArgs> Chat;
@@ -69,6 +79,16 @@ namespace Gameiki.Patcher.Events {
         ///     Occurs when the player gets his stats reset.
         /// </summary>
         public static event EventHandler ResetEffects;
+
+        internal static bool InvokePreHurt() {
+            var args = new HandledEventArgs();
+            PreHurt?.Invoke(null, args);
+            return args.Handled;
+        }
+
+        internal static void InvokePostHurt() {
+            PostHurt?.Invoke(null, EventArgs.Empty);
+        }
 
         internal static bool InvokeChat(string text) {
             var args = new ChatEventArgs(text);

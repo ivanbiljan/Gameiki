@@ -63,6 +63,7 @@
     <Compile Include="Cecil\DoUpdateModification.cs" />
     <Compile Include="Cecil\DrawCursorModification.cs" />
     <Compile Include="Cecil\DrawModification.cs" />
+    <Compile Include="Cecil\HurtModification.cs" />
     <Compile Include="Cecil\IModification.cs" />
     <Compile Include="Cecil\InitializeModification.cs" />
     <Compile Include="Cecil\LegacyGameInterfaceLayerModification.cs" />
