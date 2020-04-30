@@ -156,8 +156,8 @@ namespace Gameiki.Framework {
         }
 
         private void ReleaseUnmanagedResources() {
-            Patcher.Events.Hooks.PostCursorDraw -= OnPostCursorDraw;
-            Patcher.Events.Hooks.PostUpdate -= OnPostUpdate;
+            Hooks.PostCursorDraw -= OnPostCursorDraw;
+            Hooks.PostUpdate -= OnPostUpdate;
         }
     }
 }

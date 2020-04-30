@@ -15,10 +15,10 @@ namespace Gameiki.Extensions {
 
         public static void SendGameikiMessage(this Player player, string message, Color color = default) {
             if (color == default) {
-                Main.NewText($"[Gameiki] {message}");
+                Main.NewTextMultiline($"[Gameiki] {message}");
             }
             else {
-                Main.NewText($"[Gameiki] {message}", color.R, color.G, color.B);
+                Main.NewTextMultiline($"[Gameiki] {message}", c: color);
             }
         }
     }

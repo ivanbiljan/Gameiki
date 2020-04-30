@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gameiki.Extensions;
@@ -58,6 +61,61 @@ namespace Gameiki {
 
             // Initialize the GUI
             Toolbar.Instance.Initialize();
+            
+            // Register commands
+            CommandManager.Instance.RegisterCommand(new Regex("help"), Help, ".help - Lists all commands");
+            CommandManager.Instance.RegisterCommand(new Regex(@"(?:item|i)(.*)"), SpawnItem,
+                ".item <name or id> - Spawns the item");
+        }
+
+        private void Help(Match match) {
+            var output = new StringBuilder();
+            foreach (var command in CommandManager.Instance.Commands) {
+                if (string.IsNullOrWhiteSpace(command.HelpText)) {
+                    continue;
+                }
+                
+                output.AppendLine(command.HelpText);
+            }
+            
+            MyPlayer.SendGameikiMessage("Available commands:", Color.LimeGreen);
+            MyPlayer.SendGameikiMessage(output.ToString(), Color.Yellow);
+        }
+
+        private void SpawnItem(Match match) {
+            var itemName = match.Groups[1].Value.ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(itemName)) {
+                MyPlayer.SendGameikiMessage("Invalid syntax. Proper syntax: .item <name or id>", Color.Red);
+                return;
+            }
+            
+            var item = new Item();
+            var items = new List<Item>();
+            if (!int.TryParse(itemName, out var netId)) {
+                for (var i = 0; i < Main.maxItemTypes; ++i) {
+                    item.SetDefaults(i);
+                    if (item.Name.StartsWith(itemName, StringComparison.InvariantCultureIgnoreCase)) {
+                        items.Add(item);
+                    }
+
+                    if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)) {
+                        items = new List<Item> {item};
+                        break;
+                    }
+                }
+                
+                if (items.Count > 1) {
+                    MyPlayer.SendGameikiMessage($"Found multiple matches: {string.Join(", ", items.Select(i => i.Name))}", Color.Yellow);
+                    return;
+                }
+
+                item = items[0];
+                item.stack = item.maxStack;
+            }
+            
+            item.SetDefaults(netId);
+            MyPlayer.GetItem(Main.myPlayer, item);
+            MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
         }
 
         private void OnResetPlayerEffects(object sender, EventArgs e) {

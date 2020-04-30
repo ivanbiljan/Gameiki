@@ -28,7 +28,7 @@ namespace Gameiki.Framework.Commands {
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            var command = new Command(syntaxRegex, input => callback.Invoke(syntaxRegex.Match(input)));
+            var command = new Command(syntaxRegex, input => callback.Invoke(syntaxRegex.Match(input)), helpText);
             _commands.Add(command);
         }
 
