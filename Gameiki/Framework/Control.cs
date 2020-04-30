@@ -150,6 +150,16 @@ namespace Gameiki.Framework {
                 child.OnPostUpdate(sender, args);
             }
         }
+        
+        /// <summary>
+        /// Gets or sets the foreground color.
+        /// </summary>
+        public Color ForegroundColor { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the background color.
+        /// </summary>
+        public Color BackgroundColor { get; set; }
 
         public void SetPosition(float x, float y) {
             Position = new Vector2(x, y);

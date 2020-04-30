@@ -17,7 +17,7 @@ namespace Gameiki.Framework {
         public override void Initialize() {
             base.Initialize();
 
-            Patcher.Events.Hooks.PreCursorDraw += OnPreCursorDraw;
+            Hooks.PreCursorDraw += OnPreCursorDraw;
         }
 
         private void OnPreCursorDraw(object sender, HandledEventArgs e) {
