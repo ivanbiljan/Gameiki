@@ -70,6 +70,8 @@
     <Compile Include="Framework\Commands\CommandManager.cs" />
     <Compile Include="Framework\Control.cs" />
     <Compile Include="Framework\Label.cs" />
+    <Compile Include="Framework\Orientation.cs" />
+    <Compile Include="Framework\Slider.cs" />
     <Compile Include="Framework\TextBox.cs" />
     <Compile Include="Framework\Toolbar.cs" />
     <Compile Include="Gameiki.cs" />

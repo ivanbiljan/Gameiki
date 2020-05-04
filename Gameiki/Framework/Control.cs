@@ -72,8 +72,8 @@ namespace Gameiki.Framework {
         }
 
         public virtual void Initialize() {
-            Patcher.Events.Hooks.PostCursorDraw += OnPostCursorDraw;
-            Patcher.Events.Hooks.PostUpdate += OnPostUpdate;
+            Hooks.PostCursorDraw += OnPostCursorDraw;
+            Hooks.PostUpdate += OnPostUpdate;
         }
 
         /// <summary>

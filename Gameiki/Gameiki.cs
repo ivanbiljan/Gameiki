@@ -94,14 +94,18 @@ namespace Gameiki {
             if (!int.TryParse(itemName, out var netId)) {
                 for (var i = 0; i < Main.maxItemTypes; ++i) {
                     item.SetDefaults(i);
-                    if (item.Name.StartsWith(itemName, StringComparison.InvariantCultureIgnoreCase)) {
+                    if (item.Name.StartsWith(itemName, StringComparison.OrdinalIgnoreCase)) {
                         items.Add(item);
                     }
 
-                    if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase)) {
+                    if (item.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase)) {
                         items = new List<Item> {item};
                         break;
                     }
+                }
+
+                if (items.Count == 0) {
+                    MyPlayer.SendGameikiMessage("No results found.");
                 }
                 
                 if (items.Count > 1) {

@@ -46,7 +46,6 @@ namespace Gameiki.Framework {
                 Text = Main.GetInputText(Text);
                 if (Main.inputTextEscape) {
                     HasFocus = false;
-                    //Text = string.Empty;
                 }
 
                 if (_mouseBlinkCounter++ == 20) {
