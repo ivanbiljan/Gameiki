@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -38,6 +37,11 @@ namespace Gameiki.Framework {
         }
 
         /// <summary>
+        ///     Gets or sets the background color.
+        /// </summary>
+        public Color BackgroundColor { get; set; }
+
+        /// <summary>
         ///     Gets the child controls.
         /// </summary>
         public List<Control> Children { get; } = new List<Control>();
@@ -46,6 +50,11 @@ namespace Gameiki.Framework {
         ///     Gets the dimensions.
         /// </summary>
         public Vector2 Dimensions { get; protected set; }
+
+        /// <summary>
+        ///     Gets or sets the foreground color.
+        /// </summary>
+        public Color ForegroundColor { get; set; }
 
         /// <summary>
         ///     Gets the padding.
@@ -85,6 +94,10 @@ namespace Gameiki.Framework {
         ///     Occurs when the cursor leaves the control.
         /// </summary>
         public event EventHandler MouseLeave;
+
+        public void SetPosition(float x, float y) {
+            Position = new Vector2(x, y);
+        }
 
         protected virtual void Dispose(bool disposing) {
             ReleaseUnmanagedResources();
@@ -149,20 +162,6 @@ namespace Gameiki.Framework {
             foreach (var child in Children) {
                 child.OnPostUpdate(sender, args);
             }
-        }
-        
-        /// <summary>
-        /// Gets or sets the foreground color.
-        /// </summary>
-        public Color ForegroundColor { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the background color.
-        /// </summary>
-        public Color BackgroundColor { get; set; }
-
-        public void SetPosition(float x, float y) {
-            Position = new Vector2(x, y);
         }
 
         private void ReleaseUnmanagedResources() {

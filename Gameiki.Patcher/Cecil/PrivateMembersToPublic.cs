@@ -14,7 +14,7 @@ namespace Gameiki.Patcher.Cecil {
                 else {
                     typeDefinition.IsNestedPublic = true;
                 }
-                
+
                 foreach (var @event in typeDefinition.Events) {
                     @event.AddMethod.IsPrivate = false;
                     @event.AddMethod.IsPublic = true;

@@ -8,20 +8,10 @@ namespace Gameiki.Patcher.Events {
     [PublicAPI]
     public static class Hooks {
         /// <summary>
-        /// Occurs before the player is hurt.
-        /// </summary>
-        public static EventHandler<HandledEventArgs> PreHurt;
-
-        /// <summary>
-        /// Occurs after the player is hurt.
-        /// </summary>
-        public static EventHandler PostHurt;
-        
-        /// <summary>
-        /// Occurs when the player sends a message.
+        ///     Occurs when the player sends a message.
         /// </summary>
         public static EventHandler<ChatEventArgs> Chat;
-        
+
         /// <summary>
         ///     Occurs after Terraria initializes.
         /// </summary>
@@ -45,6 +35,11 @@ namespace Gameiki.Patcher.Events {
         public static EventHandler<DrawEventArgs> PostDraw;
 
         /// <summary>
+        ///     Occurs after the player is hurt.
+        /// </summary>
+        public static EventHandler PostHurt;
+
+        /// <summary>
         ///     Occurs after Terraria updates.
         /// </summary>
         public static EventHandler PostUpdate;
@@ -59,6 +54,11 @@ namespace Gameiki.Patcher.Events {
         ///     Occurs before Terraria does any drawing, before any calls inside the DoDraw method.
         /// </summary>
         public static EventHandler<DrawEventArgs> PreDraw;
+
+        /// <summary>
+        ///     Occurs before the player is hurt.
+        /// </summary>
+        public static EventHandler<HandledEventArgs> PreHurt;
 
         /// <summary>
         ///     Occurs before Terraria updates.
@@ -79,16 +79,6 @@ namespace Gameiki.Patcher.Events {
         ///     Occurs when the player gets his stats reset.
         /// </summary>
         public static event EventHandler ResetEffects;
-
-        internal static bool InvokePreHurt() {
-            var args = new HandledEventArgs();
-            PreHurt?.Invoke(null, args);
-            return args.Handled;
-        }
-
-        internal static void InvokePostHurt() {
-            PostHurt?.Invoke(null, EventArgs.Empty);
-        }
 
         internal static bool InvokeChat(string text) {
             var args = new ChatEventArgs(text);
@@ -112,6 +102,10 @@ namespace Gameiki.Patcher.Events {
             PostDraw?.Invoke(null, new DrawEventArgs());
         }
 
+        internal static void InvokePostHurt() {
+            PostHurt?.Invoke(null, EventArgs.Empty);
+        }
+
         internal static void InvokePostInterfaceLayerDraw(string name) {
             PostInterfaceLayerDraw?.Invoke(null, new InterfaceLayerDrawEventArgs(name));
         }
@@ -128,6 +122,12 @@ namespace Gameiki.Patcher.Events {
 
         internal static void InvokePreDraw() {
             PreDraw?.Invoke(null, new DrawEventArgs());
+        }
+
+        internal static bool InvokePreHurt() {
+            var args = new HandledEventArgs();
+            PreHurt?.Invoke(null, args);
+            return args.Handled;
         }
 
         internal static void InvokePreInterfaceLayerDraw(string name) {

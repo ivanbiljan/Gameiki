@@ -3,14 +3,13 @@ using System.ComponentModel;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameInput;
 
 namespace Gameiki.Framework {
     /// <summary>
-    /// Represents a textbox control.
+    ///     Represents a textbox control.
     /// </summary>
     public class TextBox : Control {
         private Texture2D _generalTexture;
@@ -20,12 +19,27 @@ namespace Gameiki.Framework {
         public TextBox(int x, int y, int width, int height) : base(x, y, width, height) {
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether the textbox has focus.
+        /// </summary>
+        public bool HasFocus { get; set; }
+
+        /// <summary>
+        ///     Gets the placeholder text.
+        /// </summary>
+        public string PlaceholderText { get; } = "Type here...";
+
+        /// <summary>
+        ///     Gets the current text.
+        /// </summary>
+        public string Text { get; private set; }
+
         public override void Initialize() {
             base.Initialize();
 
             _generalTexture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
             _generalTexture.SetData(new[] {Color.White});
-            
+
             Hooks.PreCursorDraw += OnPreCursorDraw;
             MouseClick += OnMouseClick;
         }
@@ -52,27 +66,12 @@ namespace Gameiki.Framework {
                     _mouseBlinkCounter = 0;
                     _isCursorBlinking = !_isCursorBlinking;
                 }
-                
+
                 PlayerInput.WritingText = HasFocus;
                 Main.instance.HandleIME();
                 Main.spriteBatch.DrawString(Main.fontMouseText, $"{Text}{(_isCursorBlinking ? "|" : string.Empty)}",
                     new Vector2(Position.X + 3, Position.Y + 3), Color.Black);
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the textbox has focus.
-        /// </summary>
-        public bool HasFocus { get; set; } = false;
-
-        /// <summary>
-        /// Gets the current text.
-        /// </summary>
-        public string Text { get; private set; }
-
-        /// <summary>
-        /// Gets the placeholder text.
-        /// </summary>
-        public string PlaceholderText { get; } = "Type here...";
     }
 }

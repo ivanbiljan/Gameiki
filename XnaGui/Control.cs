@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace XnaGui {
+    /// <summary>
+    /// Represents the base class for a GUI control.
+    /// </summary>
     public abstract class Control {
+        /// <summary>
+        ///     Occurs when the control is clicked.
+        /// </summary>
+        public static EventHandler Clicked;
+
         private readonly Vector2 _origin;
         private Vector2 _position;
 
@@ -21,11 +27,23 @@ namespace XnaGui {
         protected Control(Control parent, int x, int y, int width, int height) {
             _origin = parent?.Position ?? new Vector2(0, 0);
             _position = new Vector2(x, y);
-            
+
             Parent = parent;
             Dimensions = new Vector2(width, height);
             BoundBox = new Rectangle((int) Position.X, (int) Position.Y, width, height);
+
+            MouseManager.Click += OnClickedInternal;
         }
+
+        /// <summary>
+        ///     Gets or sets the background color.
+        /// </summary>
+        public Color BackgroundColor { get; set; } = Color.White;
+
+        /// <summary>
+        ///     Gets the control's boundaries.
+        /// </summary>
+        public Rectangle BoundBox { get; }
 
         /// <summary>
         ///     Gets the child controls.
@@ -35,7 +53,12 @@ namespace XnaGui {
         /// <summary>
         ///     Gets the dimensions.
         /// </summary>
-        public Vector2 Dimensions { get; private set; }
+        public Vector2 Dimensions { get; }
+
+        /// <summary>
+        ///     Gets or sets the foreground color.
+        /// </summary>
+        public Color ForegroundColor { get; set; } = Color.White;
 
         /// <summary>
         ///     Gets the padding.
@@ -46,11 +69,6 @@ namespace XnaGui {
         ///     Gets the parent control.
         /// </summary>
         public Control Parent { get; }
-        
-        /// <summary>
-        /// Gets the control's boundaries.
-        /// </summary>
-        public Rectangle BoundBox { get; }
 
         /// <summary>
         ///     Gets the position relative to the control's parent.
@@ -66,22 +84,56 @@ namespace XnaGui {
             }
         }
 
+        ~Control() {
+            Dispose(false);
+        }
+
         public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        ~Control() {
-            Dispose(false);
+        /// <summary>
+        ///     Draws the control.
+        /// </summary>
+        /// <param name="gameTime">The current time snapshot.</param>
+        /// <param name="spriteBatch">The sprite batch used to draw the control.</param>
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
+            foreach (var child in Children) {
+                child.Draw(gameTime, spriteBatch);
+            }
         }
 
         /// <summary>
-        /// Initializes the control.
+        ///     Initializes the control.
         /// </summary>
-        public virtual void Initialize() { }
+        public virtual void Initialize() {
+        }
 
         /// <summary>
-        /// Disposes the control.
+        ///     Indicates whether the control is hovered over.
+        /// </summary>
+        /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
+        public bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
+
+        /// <summary>
+        ///     Updates the control.
+        /// </summary>
+        /// <param name="gameTime">The current time snapshot.</param>
+        public virtual void Update(GameTime gameTime) {
+            if (!XnaGui.IsGameActive) {
+                return;
+            }
+
+            foreach (var child in Children) {
+                child.Update(gameTime);
+            }
+
+            MouseManager.Update();
+        }
+
+        /// <summary>
+        ///     Disposes the control.
         /// </summary>
         /// <param name="disposing"><c>true</c> if disposing managed resources; otherwise, <c>false</c>.</param>
         protected virtual void Dispose(bool disposing) {
@@ -93,41 +145,16 @@ namespace XnaGui {
             }
         }
 
-        /// <summary>
-        /// Updates the control.
-        /// </summary>
-        /// <param name="gameTime">The current time snapshot.</param>
-        public virtual void Update(GameTime gameTime) {
-            foreach (var child in Children) {
-                child.Update(gameTime);
-            }
+        protected virtual void OnClicked(object sender, EventArgs args) {
+            Clicked?.Invoke(sender, args);
         }
 
-        /// <summary>
-        /// Draws the control.
-        /// </summary>
-        /// <param name="gameTime">The current time snapshot.</param>
-        /// <param name="spriteBatch">The sprite batch used to draw the control.</param>
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-            foreach (var child in Children) {
-                child.Draw(gameTime, spriteBatch);
+        private void OnClickedInternal(object sender, EventArgs args) {
+            if (!IsHoveredOver()) {
+                return;
             }
+
+            OnClicked(sender, args);
         }
-
-        /// <summary>
-        /// Gets or sets the foreground color.
-        /// </summary>
-        public Color ForegroundColor { get; set; } = Color.White;
-
-        /// <summary>
-        /// Gets or sets the background color.
-        /// </summary>
-        public Color BackgroundColor { get; set; } = Color.White;
-
-        /// <summary>
-        /// Indicates whether the control is hovered over.
-        /// </summary>
-        /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
-        public bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
     }
 }

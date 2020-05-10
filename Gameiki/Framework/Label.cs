@@ -14,6 +14,10 @@ namespace Gameiki.Framework {
             Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
+        public Color Color { get; set; } = Color.White;
+
+        public string Text { get; }
+
         public override void Initialize() {
             base.Initialize();
 
@@ -23,9 +27,5 @@ namespace Gameiki.Framework {
         private void OnPreCursorDraw(object sender, HandledEventArgs e) {
             Main.spriteBatch.DrawString(Main.fontMouseText, Text, Position, Color);
         }
-
-        public string Text { get; }
-
-        public Color Color { get; set; } = Color.White;
     }
 }

@@ -6,14 +6,14 @@ namespace GameikiUI.Playground {
     public partial class Test : Form {
         public Test() {
             InitializeComponent();
-            
+
             PrintColoredString(richTextBox1, "Hello, World!", Color.Brown); // Ispis inicijalnog teksta
             richTextBox1.AppendText(Environment.NewLine);
 
             richTextBox1.SelectionStart = 0; // Odabir riječi "Hello"
             richTextBox1.SelectionLength = 5;
             richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Bold); // Podebljanje riječi "Hello"
-            
+
             // Indentacija teksta
             richTextBox1.SelectionStart = richTextBox1.TextLength;
             richTextBox1.SelectionLength = 0;

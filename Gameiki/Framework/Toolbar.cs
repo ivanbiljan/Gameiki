@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Gameiki.Extensions;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
 using Terraria;
 using Terraria.ID;
-using Color = Microsoft.Xna.Framework.Color;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Gameiki.Framework {
     internal sealed class ToolbarItem {
@@ -47,13 +41,14 @@ namespace Gameiki.Framework {
             new ToolbarItem(Main.npcHeadTexture[2], () => { }, "Town NPCs"),
             new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\music"),
                 () => PlayMusic(), "Plays music"),
-            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\flashlight"), Fullbright, "Fullbright") {ScaleOverride = 0.6f},
+            new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\flashlight"), Fullbright, "Fullbright")
+                {ScaleOverride = 0.6f},
             new ToolbarItem(Main.instance.OurLoad<Texture2D>("Images\\Gameiki\\Other\\godmode"), Godmode, "Godmode")
                 {ScaleOverride = 0.5f}
         };
 
         private Texture2D _pointerTexture;
-        private Button _toggleButton;
+        private readonly Button _toggleButton;
         private bool _visible = true;
 
         private Toolbar() {
@@ -68,6 +63,13 @@ namespace Gameiki.Framework {
 
         public static Toolbar Instance => _instance ?? (_instance = new Toolbar());
 
+        private static void Fullbright() {
+            var session = Gameiki.MyPlayer.GetData<Session>("session");
+            session.IsFullbright = !session.IsFullbright;
+            Gameiki.MyPlayer.SendGameikiMessage(
+                $"Fullbright is now {(session.IsFullbright ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
+        }
+
         private static void Godmode() {
             var session = Gameiki.MyPlayer.GetData<Session>("session");
             session.IsGodmode = !session.IsGodmode;
@@ -75,11 +77,9 @@ namespace Gameiki.Framework {
                 $"Godmode is now {(session.IsGodmode ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
         }
 
-        private static void Fullbright() {
-            var session = Gameiki.MyPlayer.GetData<Session>("session");
-            session.IsFullbright = !session.IsFullbright;
-            Gameiki.MyPlayer.SendGameikiMessage(
-                $"Fullbright is now {(session.IsFullbright ? GameikiUtils.GetColoredString("on", Color.LimeGreen) : GameikiUtils.GetColoredString("off", Color.Red))}.");
+        private static void PlayMusic() {
+            Main.spriteBatch.End();
+            SongPlayer.Instance.PlayRandom();
         }
 
         private static void RevealMap() {
@@ -89,7 +89,7 @@ namespace Gameiki.Framework {
                         Main.Map.UpdateLighting(x, y, 255);
                     }
                 }
-                
+
                 Main.refreshMap = true;
             });
 
@@ -112,7 +112,7 @@ namespace Gameiki.Framework {
             if (!_visible || Main.drawingPlayerChat) {
                 return;
             }
-            
+
             Utils.DrawInvBG(Main.spriteBatch, _boundaries);
 
             var offset = 0;
@@ -160,11 +160,6 @@ namespace Gameiki.Framework {
                 var toggleTextSize = Main.fontMouseText.MeasureString("Toggle");
                 _toggleButton.SetPosition(_toggleButton.Position.X, Main.screenHeight - 45 - (int) (toggleTextSize.Y + 10));
             }
-        }
-
-        private static void PlayMusic() {
-            Main.spriteBatch.End();
-            SongPlayer.Instance.PlayRandom();
         }
     }
 }

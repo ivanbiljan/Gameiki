@@ -118,17 +118,6 @@ namespace Gameiki.Patcher.Extensions {
         }
 
         /// <summary>
-        ///     Replaces short form branching instructions with their corresponding long equivalent.
-        /// </summary>
-        /// <param name="methodDefinition">The method definition.</param>
-        public static void ReplaceShortBranches(this MethodDefinition methodDefinition) {
-            foreach (var instruction in methodDefinition.Body.Instructions.Where(
-                i => i.OpCode.OperandType == OperandType.ShortInlineBrTarget)) {
-                instruction.OpCode = BranchMap[instruction.OpCode];
-            }
-        }
-
-        /// <summary>
         ///     Removes the specified instruction range starting from the specified index.
         /// </summary>
         /// <param name="methodDefinition">The method definition.</param>
@@ -143,6 +132,17 @@ namespace Gameiki.Patcher.Extensions {
 
             for (var i = startIndex; i < startIndex + numberOfInstructions; ++i) {
                 methodDefinition.Body.Instructions.RemoveAt(startIndex);
+            }
+        }
+
+        /// <summary>
+        ///     Replaces short form branching instructions with their corresponding long equivalent.
+        /// </summary>
+        /// <param name="methodDefinition">The method definition.</param>
+        public static void ReplaceShortBranches(this MethodDefinition methodDefinition) {
+            foreach (var instruction in methodDefinition.Body.Instructions.Where(
+                i => i.OpCode.OperandType == OperandType.ShortInlineBrTarget)) {
+                instruction.OpCode = BranchMap[instruction.OpCode];
             }
         }
 

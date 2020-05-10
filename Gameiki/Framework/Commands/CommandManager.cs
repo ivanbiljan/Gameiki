@@ -2,22 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace Gameiki.Framework.Commands {
     /// <summary>
-    /// Represents a command manager.
+    ///     Represents a command manager.
     /// </summary>
     public sealed class CommandManager {
         private readonly IList<Command> _commands = new List<Command>();
 
         private CommandManager() {
-            
         }
-        
-        public static  CommandManager Instance { get; } = new CommandManager();
 
         public IEnumerable<Command> Commands => _commands.AsEnumerable();
+
+        public static CommandManager Instance { get; } = new CommandManager();
 
         public void RegisterCommand(Regex syntaxRegex, Action<Match> callback, string helpText = null) {
             if (syntaxRegex == null) {
@@ -38,7 +36,7 @@ namespace Gameiki.Framework.Commands {
                 if (!command.Syntax.IsMatch(input)) {
                     continue;
                 }
-                
+
                 command.Callback.Invoke(input);
             }
         }

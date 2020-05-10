@@ -10,7 +10,6 @@ using Gameiki.Framework;
 using Gameiki.Framework.Commands;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Terraria;
 
 namespace Gameiki {
@@ -23,13 +22,25 @@ namespace Gameiki {
             Hooks.ResetEffects += OnResetPlayerEffects;
         }
 
-        private void OnPreHurt(object sender, HandledEventArgs e) {
-            var session = MyPlayer.GetData<Session>("session");
-            if (!session.IsGodmode) {
-                return;
+        public static Player MyPlayer => Main.player[Main.myPlayer];
+
+        // ReSharper disable once MemberCanBeMadeStatic.Global
+        public void Run(string[] args) {
+            Terraria.Program.LaunchGame(args);
+        }
+
+        private void Help(Match match) {
+            var output = new StringBuilder();
+            foreach (var command in CommandManager.Instance.Commands) {
+                if (string.IsNullOrWhiteSpace(command.HelpText)) {
+                    continue;
+                }
+
+                output.AppendLine(command.HelpText);
             }
 
-            e.Handled = true;
+            MyPlayer.SendGameikiMessage("Available commands:", Color.LimeGreen);
+            MyPlayer.SendGameikiMessage(output.ToString(), Color.Yellow);
         }
 
         private void OnChat(object sender, ChatEventArgs e) {
@@ -46,13 +57,6 @@ namespace Gameiki {
             }
         }
 
-        public static Player MyPlayer => Main.player[Main.myPlayer];
-
-        // ReSharper disable once MemberCanBeMadeStatic.Global
-        public void Run(string[] args) {
-            Terraria.Program.LaunchGame(args);
-        }
-
         private void OnGameInitialized(object sender, EventArgs e) {
             Main.versionNumber += "\nGameiki Remaster v1.0. Powered by Mono.Cecil";
 
@@ -61,65 +65,46 @@ namespace Gameiki {
 
             // Initialize the GUI
             Toolbar.Instance.Initialize();
-            
+
             // Register commands
             CommandManager.Instance.RegisterCommand(new Regex("help"), Help, ".help - Lists all commands");
             CommandManager.Instance.RegisterCommand(new Regex(@"(?:item|i)(.*)"), SpawnItem,
                 ".item <name or id> - Spawns the item");
         }
 
-        private void Help(Match match) {
-            var output = new StringBuilder();
-            foreach (var command in CommandManager.Instance.Commands) {
-                if (string.IsNullOrWhiteSpace(command.HelpText)) {
-                    continue;
-                }
-                
-                output.AppendLine(command.HelpText);
+        private void OnPostUpdate(object sender, EventArgs e) {
+            if (Main.mapFullscreen && Main.mouseRight && Main.mouseRightRelease) {
+                var targetLocation = new Vector2(
+                    Main.mapFullscreenPos.X + (Main.mouseX - Main.screenWidth / 2) * 0.06255F *
+                    (16 / Main.mapFullscreenScale),
+                    Main.mapFullscreenPos.Y + (Main.mouseY - Main.screenHeight / 2) * 0.06255F *
+                    (16 / Main.mapFullscreenScale));
+                Main.player[Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
             }
-            
-            MyPlayer.SendGameikiMessage("Available commands:", Color.LimeGreen);
-            MyPlayer.SendGameikiMessage(output.ToString(), Color.Yellow);
-        }
 
-        private void SpawnItem(Match match) {
-            var itemName = match.Groups[1].Value.ToLowerInvariant();
-            if (string.IsNullOrWhiteSpace(itemName)) {
-                MyPlayer.SendGameikiMessage("Invalid syntax. Proper syntax: .item <name or id>", Color.Red);
+            var session = MyPlayer.GetData<Session>("session");
+            if (!session.IsFullbright) {
                 return;
             }
-            
-            var item = new Item();
-            var items = new List<Item>();
-            if (!int.TryParse(itemName, out var netId)) {
-                for (var i = 0; i < Main.maxItemTypes; ++i) {
-                    item.SetDefaults(i);
-                    if (item.Name.StartsWith(itemName, StringComparison.OrdinalIgnoreCase)) {
-                        items.Add(item);
-                    }
 
-                    if (item.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase)) {
-                        items = new List<Item> {item};
-                        break;
-                    }
+            var tilesX = Main.screenWidth / 16 + Lighting.offScreenTiles * 2;
+            var tilesY = Main.screenHeight / 16 + Lighting.offScreenTiles * 2;
+            for (var i = 0; i < tilesX; ++i) {
+                var lightingStates = Lighting.states[i];
+                for (var j = 0; j < tilesY; ++j) {
+                    var state = lightingStates[j];
+                    state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
                 }
-
-                if (items.Count == 0) {
-                    MyPlayer.SendGameikiMessage("No results found.");
-                }
-                
-                if (items.Count > 1) {
-                    MyPlayer.SendGameikiMessage($"Found multiple matches: {string.Join(", ", items.Select(i => i.Name))}", Color.Yellow);
-                    return;
-                }
-
-                item = items[0];
-                item.stack = item.maxStack;
             }
-            
-            item.SetDefaults(netId);
-            MyPlayer.GetItem(Main.myPlayer, item);
-            MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
+        }
+
+        private void OnPreHurt(object sender, HandledEventArgs e) {
+            var session = MyPlayer.GetData<Session>("session");
+            if (!session.IsGodmode) {
+                return;
+            }
+
+            e.Handled = true;
         }
 
         private void OnResetPlayerEffects(object sender, EventArgs e) {
@@ -166,32 +151,44 @@ namespace Gameiki {
             }
         }
 
-        private void OnPostUpdate(object sender, EventArgs e) {
-            if (Main.mapFullscreen && Main.mouseRight && Main.mouseRightRelease) {
-                var targetLocation = new Vector2(
-                    Main.mapFullscreenPos.X + (Main.mouseX - Main.screenWidth / 2) * 0.06255F *
-                    (16 / Main.mapFullscreenScale),
-                    Main.mapFullscreenPos.Y + (Main.mouseY - Main.screenHeight / 2) * 0.06255F *
-                    (16 / Main.mapFullscreenScale));
-                Main.player[Main.myPlayer].Teleport(new Vector2(targetLocation.X * 16, targetLocation.Y * 16), 1);
-            }
-
-            var session = MyPlayer.GetData<Session>("session");
-            if (!session.IsFullbright) {
+        private void SpawnItem(Match match) {
+            var itemName = match.Groups[1].Value.ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(itemName)) {
+                MyPlayer.SendGameikiMessage("Invalid syntax. Proper syntax: .item <name or id>", Color.Red);
                 return;
             }
-            
-            var tilesX = Main.screenWidth / 16 + Lighting.offScreenTiles * 2;
-            var tilesY = Main.screenHeight / 16 + Lighting.offScreenTiles * 2;
-            for (var i = 0; i < tilesX; ++i)
-            {
-                var lightingStates = Lighting.states[i];
-                for (var j = 0; j < tilesY; ++j)
-                {
-                    var state = lightingStates[j];
-                    state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
+
+            var item = new Item();
+            var items = new List<Item>();
+            if (!int.TryParse(itemName, out var netId)) {
+                for (var i = 0; i < Main.maxItemTypes; ++i) {
+                    item.SetDefaults(i);
+                    if (item.Name.StartsWith(itemName, StringComparison.OrdinalIgnoreCase)) {
+                        items.Add(item);
+                    }
+
+                    if (item.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase)) {
+                        items = new List<Item> {item};
+                        break;
+                    }
                 }
+
+                if (items.Count == 0) {
+                    MyPlayer.SendGameikiMessage("No results found.");
+                }
+
+                if (items.Count > 1) {
+                    MyPlayer.SendGameikiMessage($"Found multiple matches: {string.Join(", ", items.Select(i => i.Name))}", Color.Yellow);
+                    return;
+                }
+
+                item = items[0];
+                item.stack = item.maxStack;
             }
+
+            item.SetDefaults(netId);
+            MyPlayer.GetItem(Main.myPlayer, item);
+            MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
         }
     }
 }

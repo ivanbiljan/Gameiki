@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,7 +27,7 @@ namespace Gameiki.Framework {
             base.Initialize();
 
             // Setup hooks
-            Patcher.Events.Hooks.PreCursorDraw += OnPreCursorDraw;
+            Hooks.PreCursorDraw += OnPreCursorDraw;
             MouseClick += OnMouseClick;
 
             // Setup everything else
