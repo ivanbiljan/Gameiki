@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
@@ -50,6 +51,7 @@ namespace XnaGui {
             }
 
             var isShiftDown = IsLongPress(Keys.LeftShift) || IsLongPress(Keys.RightShift);
+            var isAltDown = IsLongPress(Keys.LeftAlt) || IsLongPress(Keys.RightAlt);
             foreach (var key in _currentKeyboardState.GetPressedKeys()) {
                 if (!IsAlphanumeric(key) && !isShiftDown && key != Keys.Space) {
                     continue;
@@ -64,11 +66,34 @@ namespace XnaGui {
                 }
 
                 switch (key) {
+                    case Keys numKey when numKey >= Keys.D0 && numKey <= Keys.D9 && !isShiftDown && !isAltDown:
+                        text += numKey.ToString().Substring(1);
+                        break;
                     case Keys.Space:
                         text += " ";
                         break;
+                    case Keys.Decimal:
+                    case Keys.OemComma:
+                        text += ",";
+                        break;
+                    case Keys.OemMinus:
+                        text += "-";
+                        break;
+                    case Keys.OemPlus:
+                        text += "+";
+                        break;
+                    case Keys.OemPeriod:
+                        text += ".";
+                        break;
                     default:
-                        text += isShiftDown ? GetModifiedKey(key).ToString() : key.ToString().ToLower();
+                        if (isAltDown) {
+                            text += GetModifiedKey(key, Keys.RightAlt);
+                        } else if (isShiftDown) {
+                            text += GetModifiedKey(key, Keys.LeftShift);
+                        }
+                        else {
+                            text += key.ToString().ToLower();
+                        }
                         break;
                 }
             }
@@ -76,19 +101,33 @@ namespace XnaGui {
             _typingCooldown = 1;
         }
 
-        private static char GetModifiedKey(Keys key) {
-            //What's important to note is that XNA's Keys enum does not map to keychars, but rather to virutal key codes
+        private static char GetModifiedKey(Keys key, Keys modifierKey = Keys.LeftShift) {
+            // What's important to note is that XNA's Keys enum does not map to keychars, but rather to virutal key codes
+            // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
             var keyCode = (uint) key & 0xFF;
             var pressedKeys = new byte[256];
-            pressedKeys[0x10] = 0x80;
-            pressedKeys[(int) key] = 0x80;
-            if (NativeMethods.ToAscii(keyCode, keyCode, pressedKeys, out var modifiedKey, 0) <= 0) {
+            //pressedKeys[0x10] = 0x80;
+            switch (modifierKey) {
+                case Keys.LeftShift:
+                case Keys.RightShift:
+                    pressedKeys[0x10] = 0x80; // Represents shift. Mark it as pressed
+                    break;
+                case Keys.LeftAlt:
+                case Keys.RightAlt:
+                    pressedKeys[0xA5] = 0x80; // VK_MENU
+                    break;
+            }
+            
+            pressedKeys[(int) key] = 0x80; // The "key" argument
+            if (NativeMethods.ToAscii(keyCode, keyCode, pressedKeys, out var modifiedKey, 1 << 28) <= 0) {
                 throw new Exception("Cannot fetch modified key.");
             }
 
             return (char) modifiedKey;
         }
 
-        private static bool IsAlphanumeric(Keys key) => key >= Keys.A && key <= Keys.Z || key >= Keys.D0 && key <= Keys.D9;
+        private static bool IsAlphanumeric(Keys key) => key >= Keys.A && key <= Keys.Z || key >= Keys.D0 && key <= Keys.D9 ||
+                                                        key == Keys.Decimal || key == Keys.OemComma || key == Keys.OemMinus ||
+                                                        key == Keys.OemPlus || key == Keys.OemPeriod;
     }
 }

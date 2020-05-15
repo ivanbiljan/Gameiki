@@ -39,7 +39,7 @@ namespace GameikiUI.Playground {
             _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             _arialFont = Content.Load<DynamicSpriteFont>("Fonts\\Mouse_Text");
 
-            _controls.Add(new TextBox(null, 100, 200, 50, 25, _arialFont) {ForegroundColor = Color.Black, PlaceholderText = "Hello"});
+            _controls.Add(new TextBox(null, 100, 200, 100, 25, _arialFont) {ForegroundColor = Color.Black, PlaceholderText = "Hello"});
             _controls.Add(new Button(null, 100, 150, 30, 25, _arialFont, "Hello")
                 {BackgroundColor = Color.Yellow, ForegroundColor = Color.Gray, Padding = 5});
             _controls.Add(new Label(null, 100, 100, _arialFont, "Hello, World") {ForegroundColor = Color.White});

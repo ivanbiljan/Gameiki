@@ -50,20 +50,15 @@ namespace XnaGui {
 
             spriteBatch.GraphicsDevice.ScissorRectangle = BoundBox;
             spriteBatch.Draw(XnaGui.WhiteTexture, spriteBatch.GraphicsDevice.ScissorRectangle, BackgroundColor);
-            if (!string.IsNullOrWhiteSpace(Text)) {
-                spriteBatch.DrawString(_font, Text, Position, ForegroundColor);
-            }
 
-            // Restore the old rasterizer state
-            spriteBatch.End();
-            spriteBatch.Begin();
-            
             // Draw the text
             if (!_hasFocus) {
-                if (string.IsNullOrWhiteSpace(Text)) {
-                    if (!string.IsNullOrWhiteSpace(PlaceholderText)) {
-                        spriteBatch.DrawString(_font, PlaceholderText, Position, ForegroundColor);
-                    }
+                if (!string.IsNullOrWhiteSpace(Text)) {
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(PlaceholderText)) {
+                    spriteBatch.DrawString(_font, PlaceholderText, Position, new Color(ForegroundColor.R, ForegroundColor.G, ForegroundColor.B, 0.25F));
                 }
             }
             else {
@@ -72,7 +67,7 @@ namespace XnaGui {
                     _isCursorBlinking = !_isCursorBlinking;
                 }
 
-                if (_isCursorBlinking && _hasFocus) {
+                if (_isCursorBlinking) {
                     spriteBatch.DrawString(_font, $"{Text}|", Position,
                         ForegroundColor);
                 }
@@ -81,6 +76,10 @@ namespace XnaGui {
                         ForegroundColor);
                 }
             }
+            
+            // Restore the old rasterizer state
+            spriteBatch.End();
+            spriteBatch.Begin();
         }
 
         public override void Update(GameTime gameTime) {
@@ -102,17 +101,7 @@ namespace XnaGui {
                 _hasFocus = false;
                 return;
             }
-            
-            // if (_currentKeyboard.IsKeyDown(Keys.Left)) {
-            //     _cursorPosition = Math.Max(_cursorPosition - 1, 0);
-            //     return;
-            // }
-            //
-            // if (_currentKeyboard.IsKeyDown(Keys.Right)) {
-            //     _cursorPosition = Math.Max(_cursorPosition + 1, Text.Length);
-            //     return;
-            // }
-            
+
             UserInputHandler.GetTextInput(ref _text);
         }
 
