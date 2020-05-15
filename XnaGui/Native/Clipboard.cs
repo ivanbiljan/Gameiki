@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace XnaGui.Native {
@@ -7,7 +8,9 @@ namespace XnaGui.Native {
         private const int UnicodeTextFormat = 13;
 
         public static void Copy(string text) {
-            
+            if (!NativeMethods.OpenClipboard(IntPtr.Zero)) {
+                throw new Win32Exception("Cannot open the clipboard.");
+            }
         }
 
         public static string GetText() {
@@ -16,12 +19,12 @@ namespace XnaGui.Native {
             }
             
             if (!NativeMethods.OpenClipboard(IntPtr.Zero)) {
-                return string.Empty;
+                throw new Win32Exception("Cannot open the clipboard.");
             }
 
             var clipboardData = NativeMethods.GetClipboardData(AnsiTextFormat);
             if (clipboardData == IntPtr.Zero) {
-                return string.Empty;
+                throw new Win32Exception("Failed to retrieve clipboard data.");
             }
 
             var clipTextPtr = NativeMethods.GlobalLock(clipboardData);

@@ -48,9 +48,5 @@ namespace XnaGui {
             spriteBatch.End();
             spriteBatch.Begin();
         }
-
-        protected override void OnClicked(object sender, EventArgs args) {
-            throw new NotImplementedException();
-        }
     }
 }

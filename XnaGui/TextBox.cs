@@ -13,6 +13,7 @@ namespace XnaGui {
         private int _cursorBlinkCounter;
         private int _cursorPosition;
 
+        private string _text = "";
         private bool _hasFocus;
         private bool _isCursorBlinking;
         private DateTime _lastUpdate;
@@ -33,12 +34,31 @@ namespace XnaGui {
         /// <summary>
         ///     Gets or sets the textbox contents.
         /// </summary>
-        public string Text { get; set; } = "";
+        public string Text {
+            get => _text;
+            set => _text = value;
+        }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             base.Draw(gameTime, spriteBatch);
 
-            spriteBatch.Draw(XnaGui.WhiteTexture, BoundBox, BackgroundColor);
+            // Draw the bounding box
+            //spriteBatch.Draw(XnaGui.WhiteTexture, BoundBox, BackgroundColor);
+            // Enable scissor rectangles so we can clip the text to the bounding rectangle
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, new RasterizerState {ScissorTestEnable = true});
+
+            spriteBatch.GraphicsDevice.ScissorRectangle = BoundBox;
+            spriteBatch.Draw(XnaGui.WhiteTexture, spriteBatch.GraphicsDevice.ScissorRectangle, BackgroundColor);
+            if (!string.IsNullOrWhiteSpace(Text)) {
+                spriteBatch.DrawString(_font, Text, Position, ForegroundColor);
+            }
+
+            // Restore the old rasterizer state
+            spriteBatch.End();
+            spriteBatch.Begin();
+            
+            // Draw the text
             if (!_hasFocus) {
                 if (string.IsNullOrWhiteSpace(Text)) {
                     if (!string.IsNullOrWhiteSpace(PlaceholderText)) {
@@ -47,13 +67,13 @@ namespace XnaGui {
                 }
             }
             else {
-                if (++_cursorBlinkCounter > 20) {
+                if (++_cursorBlinkCounter > 50) {
                     _cursorBlinkCounter = 0;
                     _isCursorBlinking = !_isCursorBlinking;
                 }
 
                 if (_isCursorBlinking && _hasFocus) {
-                    spriteBatch.DrawString(_font, Text.Insert(_cursorPosition, "|"), Position,
+                    spriteBatch.DrawString(_font, $"{Text}|", Position,
                         ForegroundColor);
                 }
                 else {
@@ -65,6 +85,8 @@ namespace XnaGui {
 
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
+            
+            UserInputHandler.Update(gameTime);
             if (!_hasFocus) {
                 return;
             }
@@ -81,39 +103,17 @@ namespace XnaGui {
                 return;
             }
             
-            if (_currentKeyboard.IsKeyDown(Keys.Left)) {
-                _cursorPosition = Math.Max(_cursorPosition - 1, 0);
-                return;
-            }
-
-            if (_currentKeyboard.IsKeyDown(Keys.Right)) {
-                _cursorPosition = Math.Max(_cursorPosition + 1, Text.Length);
-                return;
-            }
-
-            if (_currentKeyboard.IsKeyDown(Keys.Back) && Text.Length != 0) {
-                Text = Text.Remove(Math.Max(Text.Length - 1, 0), 1);
-                return; 
-            }
-
-            if (_currentKeyboard.IsKeyDown(Keys.Delete) && Text.Length != 0) {
-                Text = Text.Remove(_cursorPosition, 1);
-                return;
-            }
-
-            foreach (var key in _currentKeyboard.GetPressedKeys()) {
-                // Damn
-                if (key == Keys.LeftShift || key == Keys.RightShift || key == Keys.LeftControl || key == Keys.RightControl ||
-                    key == Keys.LeftAlt || key == Keys.RightAlt || key == Keys.LeftWindows || key == Keys.RightWindows) {
-                    continue;
-                }
-                
-                if (_previousKeyboard.IsKeyDown(key) && (DateTime.Now - _lastUpdate).TotalMilliseconds >= 125) {
-                    Text += key;
-                    ++_cursorPosition;
-                    _lastUpdate = DateTime.Now;
-                }
-            }
+            // if (_currentKeyboard.IsKeyDown(Keys.Left)) {
+            //     _cursorPosition = Math.Max(_cursorPosition - 1, 0);
+            //     return;
+            // }
+            //
+            // if (_currentKeyboard.IsKeyDown(Keys.Right)) {
+            //     _cursorPosition = Math.Max(_cursorPosition + 1, Text.Length);
+            //     return;
+            // }
+            
+            UserInputHandler.GetTextInput(ref _text);
         }
 
         protected override void OnClicked(object sender, EventArgs args) {

@@ -39,7 +39,6 @@ namespace XnaGui {
         /// </summary>
         /// <param name="game">The game, which must not be <c>null</c>.</param>
         public static void Initialize(Game game) {
-            MessageBox.Show(Clipboard.GetText());
             _game = game ?? throw new ArgumentNullException(nameof(game));
 
             WhiteTexture = new Texture2D(_game.GraphicsDevice, 1, 1);

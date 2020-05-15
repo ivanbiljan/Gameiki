@@ -16,7 +16,13 @@ namespace XnaGui.Native {
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr GetClipboardData(uint format);
         
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GlobalLock(IntPtr hMem);
+        
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        public static extern short GetKeyState(int keyCode);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int ToAscii(uint uVirtKey, uint uScanCode, byte[] lpKeyState, out uint lpChar, uint flags);
     }
 }
