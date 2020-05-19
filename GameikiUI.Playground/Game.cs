@@ -23,11 +23,8 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            foreach (var control in _controls) {
-                control.Draw(gameTime, _spriteBatch);
-            }
-
-            _spriteBatch.DrawRectangleOutline(Vector2.Zero, 100, 100, Color.Red, 10);
+            _spriteBatch.DrawLine(Vector2.Zero, new Vector2(50, 50), Color.Red, 5);
+            _spriteBatch.DrawHorizontalLine(new Vector2(100, 100), 50, Color.Red, 0, 5);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -40,11 +37,6 @@ namespace GameikiUI.Playground {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             _arialFont = Content.Load<DynamicSpriteFont>("Fonts\\Mouse_Text");
-
-            _controls.Add(new TextBox(null, 100, 200, 100, 25, _arialFont) {ForegroundColor = Color.Black, PlaceholderText = "Hello"});
-            _controls.Add(new Button(null, 100, 150, 30, 25, _arialFont, "Hello")
-                {BackgroundColor = Color.Yellow, ForegroundColor = Color.Gray, Padding = 5});
-            _controls.Add(new Label(null, 100, 100, _arialFont, "Hello, World") {ForegroundColor = Color.White});
         }
 
         protected override void UnloadContent() {
@@ -52,10 +44,6 @@ namespace GameikiUI.Playground {
         }
 
         protected override void Update(GameTime gameTime) {
-            foreach (var control in _controls) {
-                control.Update(gameTime);
-            }
-
             base.Update(gameTime);
         }
     }
