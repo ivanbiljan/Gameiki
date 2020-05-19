@@ -63,11 +63,11 @@ namespace XnaGui.Extensions {
             DrawLine(spriteBatch, vertices[vertices.Length - 1], vertices[0], color, borderWidth);
         }
 
-        public static void DrawNSidedPolygon(this SpriteBatch spriteBatch, int radius, int sides) {
+        public static void DrawNSidedPolygon(this SpriteBatch spriteBatch, Vector2 center, int radius, int sides) {
             var vertices = new Vector2[sides];
             for (var i = 0; i < vertices.Length; ++i) {
-                vertices[i] = new Vector2(radius * (float) Math.Cos(Math.PI * 2 * i / sides) + 100,
-                    radius * (float) Math.Sin(Math.PI * 2 * i / sides) + 100);
+                vertices[i] = new Vector2(radius * (float) Math.Cos(Math.PI * 2 * i / sides ) + center.X,
+                    radius * (float) Math.Sin(Math.PI * 2 * i / sides) + center.Y);
             }
             
             DrawArbitraryPolygon(spriteBatch, vertices, Color.Aqua);
