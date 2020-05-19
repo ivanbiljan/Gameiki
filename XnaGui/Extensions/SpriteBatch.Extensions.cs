@@ -63,6 +63,16 @@ namespace XnaGui.Extensions {
             DrawLine(spriteBatch, vertices[vertices.Length - 1], vertices[0], color, borderWidth);
         }
 
+        public static void DrawNSidedPolygon(this SpriteBatch spriteBatch, int radius, int sides) {
+            var vertices = new Vector2[sides];
+            for (var i = 0; i < vertices.Length; ++i) {
+                vertices[i] = new Vector2(radius * (float) Math.Cos(Math.PI * 2 * i / sides) + 100,
+                    radius * (float) Math.Sin(Math.PI * 2 * i / sides) + 100);
+            }
+            
+            DrawArbitraryPolygon(spriteBatch, vertices, Color.Aqua);
+        }
+
         public static void DrawRightTriangleOutline(this SpriteBatch spriteBatch, int width, int height, Color color) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
