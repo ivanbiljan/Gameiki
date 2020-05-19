@@ -23,8 +23,16 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.DrawLine(Vector2.Zero, new Vector2(50, 50), Color.Red, 5);
-            _spriteBatch.DrawHorizontalLine(new Vector2(100, 100), 50, Color.Red, 0, 5);
+
+            var vertices = new Vector2[] {
+                new Vector2(100, 100),
+                new Vector2(200, 100),
+                new Vector2(200, 200),
+                new Vector2(100, 200) 
+            };
+            
+            _spriteBatch.DrawPolygon(vertices, Color.Black, 5);
+
             _spriteBatch.End();
             base.Draw(gameTime);
         }
