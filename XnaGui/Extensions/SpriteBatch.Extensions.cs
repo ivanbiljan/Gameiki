@@ -55,7 +55,7 @@ namespace XnaGui.Extensions {
             DrawHorizontalLine(spriteBatch, startPosition, length, color, angle, borderWidth);
         }
 
-        public static void DrawPolygon(this SpriteBatch spriteBatch, Vector2[] vertices, Color color, int borderWidth = 1) {
+        public static void DrawArbitraryPolygon(this SpriteBatch spriteBatch, Vector2[] vertices, Color color, int borderWidth = 1) {
             for (var i = 0; i < vertices.Length - 1; ++i) {
                 DrawLine(spriteBatch, vertices[i], vertices[i + 1], color, borderWidth);
             }
@@ -63,9 +63,6 @@ namespace XnaGui.Extensions {
             DrawLine(spriteBatch, vertices[vertices.Length - 1], vertices[0], color, borderWidth);
         }
 
-        public static void DrawCircle(this SpriteBatch spriteBatch, Vector2 center, int radius, Color color, int borderWidth = 1) {
-        }
-        
         public static void DrawRightTriangleOutline(this SpriteBatch spriteBatch, int width, int height, Color color) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));

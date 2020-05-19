@@ -31,7 +31,8 @@ namespace GameikiUI.Playground {
                 new Vector2(100, 200) 
             };
             
-            _spriteBatch.DrawPolygon(vertices, Color.Black, 5);
+            //_spriteBatch.DrawPolygon(vertices, Color.Black, 5);
+            _spriteBatch.DrawCircle(new Vector2(150, 150), 25, Color.Red, 1, 6);
 
             _spriteBatch.End();
             base.Draw(gameTime);
