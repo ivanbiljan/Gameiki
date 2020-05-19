@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using XnaGui;
+using XnaGui.Extensions;
 
 namespace GameikiUI.Playground {
     public class Game : Microsoft.Xna.Framework.Game {
@@ -26,6 +27,7 @@ namespace GameikiUI.Playground {
                 control.Draw(gameTime, _spriteBatch);
             }
 
+            _spriteBatch.DrawRectangleOutline(100, 150, Color.Red);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

@@ -106,7 +106,6 @@ namespace XnaGui {
             // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
             var keyCode = (uint) key & 0xFF;
             var pressedKeys = new byte[256];
-            //pressedKeys[0x10] = 0x80;
             switch (modifierKey) {
                 case Keys.LeftShift:
                 case Keys.RightShift:

@@ -114,7 +114,7 @@ namespace XnaGui {
         ///     Indicates whether the control is hovered over.
         /// </summary>
         /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
-        public bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
+        private bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
 
         /// <summary>
         ///     Updates the control.
