@@ -35,7 +35,7 @@ namespace XnaGui.Extensions {
             }
         }
         
-        public static void DrawRectangleOutline(this SpriteBatch spriteBatch, Vector2 position, int width, int height, Color color) {
+        public static void DrawRectangleOutline(this SpriteBatch spriteBatch, Vector2 position, int width, int height, Color color, int borderWidth = 1) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
             }
@@ -51,14 +51,8 @@ namespace XnaGui.Extensions {
             var colors = new Color[width * height];
             for (var x = 0; x < width; ++x) {
                 for (var y = 0; y < height; ++y) {
-                    if (x == 0 || x == width - 1) {
+                    if (x <= borderWidth || x >= width - 1 - borderWidth || y <= borderWidth || y >= height - 1 - borderWidth) {
                         colors[x + y * width] = color;
-                    }
-                    else {
-                        colors[x] = color;
-                        if (y == height - 1) {
-                            colors[x + y * width] = color;
-                        }
                     }
                 }
             }

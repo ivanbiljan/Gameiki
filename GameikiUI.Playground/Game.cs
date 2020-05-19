@@ -27,7 +27,7 @@ namespace GameikiUI.Playground {
                 control.Draw(gameTime, _spriteBatch);
             }
 
-            _spriteBatch.DrawRectangleOutline(100, 150, Color.Red);
+            _spriteBatch.DrawRectangleOutline(Vector2.Zero, 100, 100, Color.Red, 10);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
