@@ -23,7 +23,7 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.DrawNSidedPolygon(50, 5);
+            _spriteBatch.DrawHorizontalLine(new Vector2(100, 100), 100, Color.Red, 0f, 5);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
