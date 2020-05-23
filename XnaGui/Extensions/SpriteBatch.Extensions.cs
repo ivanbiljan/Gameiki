@@ -32,22 +32,21 @@ namespace XnaGui.Extensions {
         }
 
         public static void DrawBezierCurve(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Vector2 controlPoint, Color color, int borderWidth = 1) {
+            Vector2 currentVertex;
             var precision = 1 / 8F;
             var vertices = new List<Vector2>();
             for (float i = 0; i < 1.1; i += precision) {
-                var newVertex = ComputeBezierCurvePoint(point1, point2, controlPoint, i);
-                vertices.Add(newVertex);
+                ComputeBezierCurvePoint(point1, point2, controlPoint, i, out currentVertex);
+                vertices.Add(currentVertex);
             }
 
             for (var i = 1; i < vertices.Count; ++i) {
                 DrawLine(spriteBatch, vertices[i - 1], vertices[i], color, borderWidth);
             }
 
-            Vector2 ComputeBezierCurvePoint(Vector2 p1, Vector2 p2, Vector2 c, float t) {
-                return new Vector2 {
-                    X = p1.X * (float) Math.Pow(1 - t, 2) + 2 * c.X * (1 - t) * t + p2.X * (float) Math.Pow(t, 2),
-                    Y = p1.Y * (float) Math.Pow(1 - t, 2) + 2 * c.Y * (1 - t) * t + p2.Y * (float) Math.Pow(t, 2)
-                };
+            void ComputeBezierCurvePoint(Vector2 p1, Vector2 p2, Vector2 c, float t, out Vector2 final) {
+                final.X = p1.X * (float) Math.Pow(1 - t, 2) + 2 * c.X * (1 - t) * t + p2.X * (float) Math.Pow(t, 2);
+                final.Y = p1.Y * (float) Math.Pow(1 - t, 2) + 2 * c.Y * (1 - t) * t + p2.Y * (float) Math.Pow(t, 2);
             }
         }
         
