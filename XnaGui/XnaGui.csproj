@@ -56,6 +56,7 @@
         <Compile Include="CheckBox.cs" />
         <Compile Include="Control.cs" />
         <Compile Include="Extensions\SpriteBatch.Extensions.cs" />
+        <Compile Include="Helpers\MathHelper.cs" />
         <Compile Include="Label.cs" />
         <Compile Include="MouseManager.cs" />
         <Compile Include="Native\Clipboard.cs" />

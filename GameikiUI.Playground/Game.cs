@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -13,9 +14,10 @@ namespace GameikiUI.Playground {
         private readonly List<Control> _controls = new List<Control>();
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private BasicEffect _effect;
 
         public Game() {
-            _graphics = new GraphicsDeviceManager(this) {PreferredBackBufferWidth = 1280, PreferredBackBufferHeight = 720};
+            _graphics = new GraphicsDeviceManager(this) {PreferredBackBufferWidth = 1280, PreferredBackBufferHeight = 720, PreferMultiSampling = true};
 
             IsMouseVisible = true;
             Content.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -23,7 +25,8 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.DrawHorizontalLine(new Vector2(100, 100), 100, Color.Red, 0f, 5);
+            _spriteBatch.DrawArc(new Vector2(150, 150), 100, 90, 180);
+            _spriteBatch.DrawNSidedPolygon(new Vector2(200, 200), 50, 24);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

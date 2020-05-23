@@ -1,15 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace XnaGui.Extensions {
     /// <summary>
     /// Provides extension methods for the <see cref="SpriteBatch"/> class.
     /// </summary>
     public static class SpriteBatchExtensions {
-        public static void DrawRectangleOutline(this SpriteBatch spriteBatch, Vector2 position, int width, int height, Color color,
+        public static void DrawArc(this SpriteBatch spriteBatch, Vector2 center, int radius, float startAngle, float sweepAngle) {
+            if (spriteBatch == null) {
+                throw new ArgumentNullException(nameof(spriteBatch));
+            }
+
+            var precision = 1 / 10F;
+            var firstPoint = new Vector2(center.X + (float) Math.Cos(MathHelper.ToRadians(startAngle)) * radius,
+                center.Y + (float) Math.Sin(MathHelper.ToRadians(startAngle)) * radius);
+            var secondPoint = new Vector2(center.X + (float) Math.Cos(MathHelper.ToRadians(startAngle + sweepAngle)) * radius,
+                center.Y + (float) Math.Sin(MathHelper.ToRadians(startAngle + sweepAngle)) * radius);
+            var slope = Helpers.MathHelper.GetSlope(firstPoint, secondPoint);
+            var controlPoint2 = new Vector2(center.X + (float) Math.Cos(MathHelper.ToRadians(startAngle + 90 - Helpers.MathHelper.GetInclineAngle(slope))) * radius * 2,
+                center.Y + (float) Math.Sin(MathHelper.ToRadians(startAngle + 90 - Helpers.MathHelper.GetInclineAngle(slope))) * radius * 2 - 50);
+            var vertices = new List<Vector2> {firstPoint};
+            for (float i = 0; i < 1.1; i += precision) {
+                var newVertex = ComputeBezierCurvePoint(firstPoint, secondPoint, controlPoint2, i);
+                vertices.Add(newVertex);
+            }
+            
+            DrawLine(spriteBatch, firstPoint, secondPoint, Color.Aqua, 1);
+            
+            for (var i = 1; i < vertices.Count; ++i) {
+                DrawLine(spriteBatch, vertices[i - 1], vertices[i], Color.Red, 1);
+            }
+
+            Vector2 ComputeBezierCurvePoint(Vector2 point1, Vector2 point2, Vector2 controlPoint, float t) {
+                return new Vector2 {
+                    X = point1.X * (float) Math.Pow(1 - t, 2) + 2 * controlPoint.X * (1 - t) * t + point2.X * (float) Math.Pow(t, 2),
+                    Y = point1.Y * (float) Math.Pow(1 - t, 2) + 2 * controlPoint.Y * (1 - t) * t + point2.Y * (float) Math.Pow(t, 2)
+                };
+            }
+        }
+
+        public static void DrawBezierCurve(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Vector2 controlPoint, Color color, int borderWidth = 1) {
+            var precision = 1 / 8F;
+            var vertices = new List<Vector2>();
+            for (float i = 0; i < 1.1; i += precision) {
+                var newVertex = ComputeBezierCurvePoint(point1, point2, controlPoint, i);
+                vertices.Add(newVertex);
+            }
+
+            for (var i = 1; i < vertices.Count; ++i) {
+                DrawLine(spriteBatch, vertices[i - 1], vertices[i], color, borderWidth);
+            }
+
+            Vector2 ComputeBezierCurvePoint(Vector2 p1, Vector2 p2, Vector2 c, float t) {
+                return new Vector2 {
+                    X = p1.X * (float) Math.Pow(1 - t, 2) + 2 * c.X * (1 - t) * t + p2.X * (float) Math.Pow(t, 2),
+                    Y = p1.Y * (float) Math.Pow(1 - t, 2) + 2 * c.Y * (1 - t) * t + p2.Y * (float) Math.Pow(t, 2)
+                };
+            }
+        }
+        
+        public static void DrawRectangle(this SpriteBatch spriteBatch, Vector2 position, int width, int height, Color color,
             int borderWidth = 1) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
@@ -35,6 +93,14 @@ namespace XnaGui.Extensions {
             var texture = new Texture2D(spriteBatch.GraphicsDevice, width, height);
             texture.SetData(colors);
             spriteBatch.Draw(texture, position, color);
+        }
+
+        public static void FillRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color color) {
+            if (spriteBatch == null) {
+                throw new ArgumentNullException(nameof(spriteBatch));
+            }
+            
+            spriteBatch.Draw(XnaGui.WhiteTexture, rectangle, color);
         }
 
         public static void DrawHorizontalLine(this SpriteBatch spriteBatch, Vector2 position, int length, Color color, float rotation = 0f, int borderWidth = 1) {
@@ -116,7 +182,33 @@ namespace XnaGui.Extensions {
             DrawArbitraryPolygon(spriteBatch, vertices, Color.Aqua);
         }
 
-        public static void DrawRightTriangleOutline(this SpriteBatch spriteBatch, int width, int height, Color color) {
+        public static void DrawNSidedPolygon(this BasicEffect basicEffect, Vector2 center, int radius, int sides) {
+            var vertices = new VertexPositionColorTexture[sides];
+            for (var i = 0; i < vertices.Length; ++i) {
+            }
+
+            var cameraPosition = new Vector3(0, 0, 0.1F);
+            var cameraLookAt = Vector3.Forward;
+            var cameraUp = Vector3.Up;
+
+            basicEffect.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, cameraUp);
+            
+            float aspectRatio = 800 / 600F;
+            float fieldOfView = MathHelper.PiOver4;
+            float nearClip = 0.1f;
+            float farClip = 200f;
+
+            //Orthogonal
+            basicEffect.Projection = Matrix.CreateOrthographic(480 * aspectRatio, 480, nearClip, farClip);
+            foreach (var pass in basicEffect.CurrentTechnique.Passes) {
+                pass.Apply();
+                basicEffect.World = Matrix.CreateScale(200);
+
+                basicEffect.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, 1);
+            }
+        }
+
+        public static void DrawRightTriangle(this SpriteBatch spriteBatch, int width, int height, Color color) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
             }
