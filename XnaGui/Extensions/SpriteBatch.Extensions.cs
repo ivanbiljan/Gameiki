@@ -10,10 +10,28 @@ using Microsoft.Xna.Framework.Graphics;
 using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace XnaGui.Extensions {
+    // TODO: Look into BasicEffect
+    
     /// <summary>
     /// Provides extension methods for the <see cref="SpriteBatch"/> class.
     /// </summary>
     public static class SpriteBatchExtensions {
+        public static void DrawEllipse(this SpriteBatch spriteBatch, Vector2 center, int a, int b, Color color, int borderWidth = 1) {
+            // (x - center.X)^2 / a^2 + (y - center.Y)^2 / b^2 = 1 --> solve for y
+            var vertices = new List<Vector2>();
+            for (var x = center.X - a; x <= center.X + a; x += 2) {
+                var y1 = center.Y + ((b * Math.Sqrt(Math.Pow(a, 2) - Math.Pow(x - center.X, 2))) / a);
+                var y2 = center.Y - ((b * Math.Sqrt(Math.Pow(a, 2) - Math.Pow(x - center.X, 2))) / a);
+                
+                vertices.Insert(0, new Vector2(x, (float) y1));
+                vertices.Add(new Vector2(x, (float) y2));
+            }
+
+            for (var i = 1; i < vertices.Count; ++i) {
+                DrawLine(spriteBatch, vertices[i - 1], vertices[i], Color.Red);
+            }
+        }
+        
         public static void DrawArc(this SpriteBatch spriteBatch, Vector2 center, int radius, float startAngle, float sweepAngle, Color color, int borderWidth = 1) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
@@ -32,6 +50,7 @@ namespace XnaGui.Extensions {
         }
 
         public static void DrawBezierCurve(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Vector2 controlPoint, Color color, int borderWidth = 1) {
+            // ReSharper disable once InlineOutVariableDeclaration
             Vector2 currentVertex;
             var precision = 1 / 8F;
             var vertices = new List<Vector2>();
@@ -163,32 +182,6 @@ namespace XnaGui.Extensions {
             }
             
             DrawArbitraryPolygon(spriteBatch, vertices, Color.Aqua);
-        }
-
-        public static void DrawNSidedPolygon(this BasicEffect basicEffect, Vector2 center, int radius, int sides) {
-            var vertices = new VertexPositionColorTexture[sides];
-            for (var i = 0; i < vertices.Length; ++i) {
-            }
-
-            var cameraPosition = new Vector3(0, 0, 0.1F);
-            var cameraLookAt = Vector3.Forward;
-            var cameraUp = Vector3.Up;
-
-            basicEffect.View = Matrix.CreateLookAt(cameraPosition, cameraLookAt, cameraUp);
-            
-            float aspectRatio = 800 / 600F;
-            float fieldOfView = MathHelper.PiOver4;
-            float nearClip = 0.1f;
-            float farClip = 200f;
-
-            //Orthogonal
-            basicEffect.Projection = Matrix.CreateOrthographic(480 * aspectRatio, 480, nearClip, farClip);
-            foreach (var pass in basicEffect.CurrentTechnique.Passes) {
-                pass.Apply();
-                basicEffect.World = Matrix.CreateScale(200);
-
-                basicEffect.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, 1);
-            }
         }
 
         public static void DrawRightTriangle(this SpriteBatch spriteBatch, int width, int height, Color color) {

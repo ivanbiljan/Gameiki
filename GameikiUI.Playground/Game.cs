@@ -25,8 +25,7 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.DrawArc(new Vector2(150, 150), 100, 90, 180);
-            _spriteBatch.DrawNSidedPolygon(new Vector2(200, 200), 50, 24);
+            _spriteBatch.DrawEllipse(new Vector2(100, 100), 50, 25, Color.Red);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
