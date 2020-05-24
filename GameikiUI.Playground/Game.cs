@@ -24,12 +24,12 @@ namespace GameikiUI.Playground {
 
             IsMouseVisible = true;
             Content.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            _controls.Add(new CheckBox(null, 10, 10, 50, 50));
         }
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.FillCircle(new Vector2(200, 200), 50, Color.Green);
-            _spriteBatch.DrawEllipse(new Vector2(100, 100), 50, 25, Color.Red);
+            _spriteBatch.DrawRoundRectangle(new Rectangle(100, 100, 250, 100), 100, Color.Red);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -50,6 +50,7 @@ namespace GameikiUI.Playground {
 
         protected override void Update(GameTime gameTime) {
             base.Update(gameTime);
+            _controls[0].Update(gameTime);
         }
     }
 }

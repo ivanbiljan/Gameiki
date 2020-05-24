@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -48,7 +49,7 @@ namespace XnaGui.Extensions {
             int borderWidth = 1) {
             // ReSharper disable once InlineOutVariableDeclaration
             Vector2 currentVertex;
-            var precision = 1 / 8F;
+            var precision = 1 / 10F;
             var vertices = new List<Vector2>();
             for (float i = 0; i < 1.1; i += precision) {
                 ComputeBezierCurvePoint(point1, point2, controlPoint, i, out currentVertex);
@@ -199,6 +200,28 @@ namespace XnaGui.Extensions {
                     }
                 }
             }
+        }
+
+        public static void DrawRoundRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, int borderRadius, Color color) {
+            borderRadius = Math.Min(borderRadius, rectangle.Height / 2);
+            
+            // Draw arcs 
+            DrawBezierCurve(spriteBatch, new Vector2(rectangle.X, rectangle.Y + borderRadius), new Vector2(rectangle.X + borderRadius, rectangle.Y), new Vector2(rectangle.X, rectangle.Y), color);
+            DrawBezierCurve(spriteBatch, new Vector2(rectangle.X + rectangle.Width - borderRadius, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + borderRadius), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), color);
+            DrawBezierCurve(spriteBatch, new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height - borderRadius),
+                new Vector2(rectangle.X + rectangle.Width - borderRadius, rectangle.Y + rectangle.Height + 1),
+                new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color);
+            DrawBezierCurve(spriteBatch, new Vector2(rectangle.X + 1, rectangle.Y + rectangle.Height - borderRadius),
+                new Vector2(rectangle.X + borderRadius, rectangle.Y + rectangle.Height),
+                new Vector2(rectangle.X, rectangle.Y + rectangle.Height), color);
+            
+            // Draw vertical lines
+            DrawLine(spriteBatch, new Vector2(rectangle.X + 1, rectangle.Y + borderRadius), new Vector2(rectangle.X + 1, rectangle.Y + rectangle.Height - borderRadius), color);
+            DrawLine(spriteBatch, new Vector2(rectangle.X + rectangle.Width, rectangle.Y + borderRadius), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height - borderRadius), color);
+            
+            // Draw horizontal lines
+            DrawLine(spriteBatch, new Vector2(rectangle.X + borderRadius, rectangle.Y), new Vector2(rectangle.X + rectangle.Width - borderRadius, rectangle.Y), color);
+            DrawLine(spriteBatch, new Vector2(rectangle.X + borderRadius, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width - borderRadius, rectangle.Y + rectangle.Height), color);
         }
 
         public static void FillCircle(this SpriteBatch spriteBatch, Vector2 center, int radius, Color color) {

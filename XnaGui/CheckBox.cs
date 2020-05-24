@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using XnaGui.Extensions;
 
 namespace XnaGui {
     public sealed class CheckBox : Control {
@@ -14,7 +16,16 @@ namespace XnaGui {
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             base.Draw(gameTime, spriteBatch);
             if (IsChecked) {
+                spriteBatch.FillRectangle(BoundBox, BackgroundColor);
             }
+            else {
+                spriteBatch.DrawRectangle(Position, BoundBox.Width, BoundBox.Height, BackgroundColor);
+            }
+        }
+
+        protected override void OnClicked(object sender, EventArgs args) {
+            base.OnClicked(sender, args);
+            IsChecked = !IsChecked;
         }
     }
 }
