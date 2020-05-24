@@ -1,33 +1,16 @@
 ﻿using System;
-using System.Globalization;
-using System.Net;
-using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using XnaGui.Native;
 
 namespace XnaGui {
     internal static class UserInputHandler {
+        private static int _backspaceCooldown;
         private static KeyboardState _currentKeyboardState;
         private static KeyboardState _previousKeyboardState;
-        private static int _backspaceCooldown;
         private static int _typingCooldown;
 
-        public static bool IsKeyPressed(Keys key) => _previousKeyboardState.IsKeyUp(key) && _currentKeyboardState.IsKeyDown(key);
-
-        public static bool IsLongPress(Keys key) => _previousKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyDown(key);
-
         public static bool IsCapsLockOn => NativeMethods.GetKeyState((ushort) Keys.CapsLock) != 0;
-
-        public static void Update(GameTime gameTime) {
-            if (_typingCooldown > 0) {
-                --_typingCooldown;
-            }
-            
-            if (_backspaceCooldown > 0) {
-                --_backspaceCooldown;
-            }
-        }
 
         public static void GetTextInput(ref string text) {
             _previousKeyboardState = _currentKeyboardState;
@@ -88,17 +71,33 @@ namespace XnaGui {
                     default:
                         if (isAltDown) {
                             text += GetModifiedKey(key, Keys.RightAlt);
-                        } else if (isShiftDown) {
-                            text += GetModifiedKey(key, Keys.LeftShift);
+                        }
+                        else if (isShiftDown) {
+                            text += GetModifiedKey(key);
                         }
                         else {
                             text += key.ToString().ToLower();
                         }
+
                         break;
                 }
             }
-            
+
             _typingCooldown = 1;
+        }
+
+        public static bool IsKeyPressed(Keys key) => _previousKeyboardState.IsKeyUp(key) && _currentKeyboardState.IsKeyDown(key);
+
+        public static bool IsLongPress(Keys key) => _previousKeyboardState.IsKeyDown(key) && _currentKeyboardState.IsKeyDown(key);
+
+        public static void Update(GameTime gameTime) {
+            if (_typingCooldown > 0) {
+                --_typingCooldown;
+            }
+
+            if (_backspaceCooldown > 0) {
+                --_backspaceCooldown;
+            }
         }
 
         private static char GetModifiedKey(Keys key, Keys modifierKey = Keys.LeftShift) {
@@ -116,7 +115,7 @@ namespace XnaGui {
                     pressedKeys[0xA5] = 0x80; // VK_MENU
                     break;
             }
-            
+
             pressedKeys[(int) key] = 0x80; // The "key" argument
             if (NativeMethods.ToAscii(keyCode, keyCode, pressedKeys, out var modifiedKey, 1 << 28) <= 0) {
                 throw new Exception("Cannot fetch modified key.");

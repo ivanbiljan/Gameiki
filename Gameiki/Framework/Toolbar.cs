@@ -47,8 +47,9 @@ namespace Gameiki.Framework {
                 {ScaleOverride = 0.5f}
         };
 
-        private Texture2D _pointerTexture;
         private readonly Button _toggleButton;
+
+        private Texture2D _pointerTexture;
         private bool _visible = true;
 
         private Toolbar() {

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XnaGui {
     /// <summary>
-    /// Represents the base class for a GUI control.
+    ///     Represents the base class for a GUI control.
     /// </summary>
     public abstract class Control {
         /// <summary>
@@ -111,12 +111,6 @@ namespace XnaGui {
         }
 
         /// <summary>
-        ///     Indicates whether the control is hovered over.
-        /// </summary>
-        /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
-        private bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
-
-        /// <summary>
         ///     Updates the control.
         /// </summary>
         /// <param name="gameTime">The current time snapshot.</param>
@@ -148,6 +142,12 @@ namespace XnaGui {
         protected virtual void OnClicked(object sender, EventArgs args) {
             Clicked?.Invoke(sender, args);
         }
+
+        /// <summary>
+        ///     Indicates whether the control is hovered over.
+        /// </summary>
+        /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
+        private bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
 
         private void OnClickedInternal(object sender, EventArgs args) {
             if (!IsHoveredOver()) {

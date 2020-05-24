@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -9,15 +8,19 @@ using XnaGui.Extensions;
 
 namespace GameikiUI.Playground {
     public class Game : Microsoft.Xna.Framework.Game {
-        private DynamicSpriteFont _arialFont;
-
         private readonly List<Control> _controls = new List<Control>();
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private DynamicSpriteFont _arialFont;
         private BasicEffect _effect;
+        private SpriteBatch _spriteBatch;
 
         public Game() {
-            _graphics = new GraphicsDeviceManager(this) {PreferredBackBufferWidth = 1280, PreferredBackBufferHeight = 720, PreferMultiSampling = true};
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280, 
+                PreferredBackBufferHeight = 720, 
+                PreferMultiSampling = true
+            };
 
             IsMouseVisible = true;
             Content.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -25,6 +28,7 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
+            _spriteBatch.FillCircle(new Vector2(200, 200), 50, Color.Green);
             _spriteBatch.DrawEllipse(new Vector2(100, 100), 50, 25, Color.Red);
             _spriteBatch.End();
             base.Draw(gameTime);

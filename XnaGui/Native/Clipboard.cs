@@ -17,7 +17,7 @@ namespace XnaGui.Native {
             if (!NativeMethods.IsClipboardFormatAvailable(AnsiTextFormat)) {
                 return string.Empty;
             }
-            
+
             if (!NativeMethods.OpenClipboard(IntPtr.Zero)) {
                 throw new Win32Exception("Cannot open the clipboard.");
             }
@@ -31,7 +31,7 @@ namespace XnaGui.Native {
             if (clipTextPtr == IntPtr.Zero) {
                 return string.Empty;
             }
-            
+
             var clipboardText = Marshal.PtrToStringAnsi(clipTextPtr);
             NativeMethods.CloseClipboard();
             return clipboardText;

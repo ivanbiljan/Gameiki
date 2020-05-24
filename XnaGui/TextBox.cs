@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,12 +11,12 @@ namespace XnaGui {
         private KeyboardState _currentKeyboard;
         private int _cursorBlinkCounter;
         private int _cursorPosition;
-
-        private string _text = "";
         private bool _hasFocus;
         private bool _isCursorBlinking;
         private DateTime _lastUpdate;
         private KeyboardState _previousKeyboard;
+
+        private string _text = "";
 
         public TextBox(Control parent, int x, int y, int width, int height) : base(parent, x, y, width, height) {
         }
@@ -58,7 +57,8 @@ namespace XnaGui {
                 }
 
                 if (!string.IsNullOrWhiteSpace(PlaceholderText)) {
-                    spriteBatch.DrawString(_font, PlaceholderText, Position, new Color(ForegroundColor.R, ForegroundColor.G, ForegroundColor.B, 0.25F));
+                    spriteBatch.DrawString(_font, PlaceholderText, Position,
+                        new Color(ForegroundColor.R, ForegroundColor.G, ForegroundColor.B, 0.25F));
                 }
             }
             else {
@@ -76,7 +76,7 @@ namespace XnaGui {
                         ForegroundColor);
                 }
             }
-            
+
             // Restore the old rasterizer state
             spriteBatch.End();
             spriteBatch.Begin();
@@ -84,7 +84,7 @@ namespace XnaGui {
 
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
-            
+
             UserInputHandler.Update(gameTime);
             if (!_hasFocus) {
                 return;

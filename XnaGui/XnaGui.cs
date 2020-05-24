@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Clipboard = XnaGui.Native.Clipboard;
 
 namespace XnaGui {
     public class XnaGui {
