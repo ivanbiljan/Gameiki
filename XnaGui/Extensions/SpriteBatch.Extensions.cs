@@ -31,8 +31,7 @@ namespace XnaGui.Extensions {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
             }
-
-            var precision = 1 / 10F;
+            
             var firstPoint = new Vector2(center.X + (float) Math.Cos(MathHelper.ToRadians(startAngle)) * radius,
                 center.Y + (float) Math.Sin(MathHelper.ToRadians(startAngle)) * radius);
             var secondPoint = new Vector2(center.X + (float) Math.Cos(MathHelper.ToRadians(startAngle + sweepAngle)) * radius,
@@ -69,7 +68,7 @@ namespace XnaGui.Extensions {
         public static void DrawEllipse(this SpriteBatch spriteBatch, Vector2 center, int a, int b, Color color, int borderWidth = 1) {
             // (x - center.X)^2 / a^2 + (y - center.Y)^2 / b^2 = 1 --> solve for y
             var vertices = new List<Vector2>();
-            for (var x = center.X - a; x <= center.X + a; x += 2) {
+            for (var x = center.X - a; x <= center.X + a; ++x) {
                 var y1 = center.Y + b * Math.Sqrt(Math.Pow(a, 2) - Math.Pow(x - center.X, 2)) / a;
                 var y2 = center.Y - b * Math.Sqrt(Math.Pow(a, 2) - Math.Pow(x - center.X, 2)) / a;
 
