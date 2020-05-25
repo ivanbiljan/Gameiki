@@ -29,7 +29,7 @@ namespace GameikiUI.Playground {
 
         protected override void Draw(GameTime gameTime) {
             _spriteBatch.Begin();
-            _spriteBatch.DrawRoundRectangle(new Rectangle(100, 100, 250, 100), 100, Color.Red);
+            _spriteBatch.DrawRoundRectangle(new Rectangle(100, 100, 250, 100), 12, Color.Red);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

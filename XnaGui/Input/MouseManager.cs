@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace XnaGui {
+namespace XnaGui.Input {
     // TODO: perhaps I should rely on WinAPI? Probably not an optimal solution, though
 
     /// <summary>

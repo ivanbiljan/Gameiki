@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using XnaGui.Native;
 
-namespace XnaGui {
+namespace XnaGui.Input {
     internal static class UserInputHandler {
         private static int _backspaceCooldown;
         private static KeyboardState _currentKeyboardState;

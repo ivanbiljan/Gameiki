@@ -57,14 +57,14 @@
         <Compile Include="Control.cs" />
         <Compile Include="Extensions\SpriteBatch.Extensions.cs" />
         <Compile Include="Helpers\MathHelper.cs" />
+        <Compile Include="Input\MouseManager.cs" />
+        <Compile Include="Input\UserInputHandler.cs" />
         <Compile Include="Label.cs" />
-        <Compile Include="MouseManager.cs" />
         <Compile Include="Native\Clipboard.cs" />
         <Compile Include="Native\NativeMethods.cs" />
         <Compile Include="Native\Platform.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="TextBox.cs" />
-        <Compile Include="UserInputHandler.cs" />
         <Compile Include="Utils.cs" />
         <Compile Include="XnaGui.cs" />
     </ItemGroup>
