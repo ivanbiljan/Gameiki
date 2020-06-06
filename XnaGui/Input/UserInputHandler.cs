@@ -112,12 +112,12 @@ namespace XnaGui.Input {
                     break;
                 case Keys.LeftAlt:
                 case Keys.RightAlt:
-                    pressedKeys[0xA5] = 0x80; // VK_MENU
+                    pressedKeys[0x12] = 0x80; // VK_MENU
                     break;
             }
 
             pressedKeys[(int) key] = 0x80; // The "key" argument
-            if (NativeMethods.ToAscii(keyCode, keyCode, pressedKeys, out var modifiedKey, 1 << 28) <= 0) {
+            if (NativeMethods.ToAscii(keyCode, 0x12 + keyCode, pressedKeys, out var modifiedKey, 1) <= 0) {
                 throw new Exception("Cannot fetch modified key.");
             }
 

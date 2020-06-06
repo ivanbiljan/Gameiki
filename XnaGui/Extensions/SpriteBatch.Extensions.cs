@@ -169,10 +169,16 @@ namespace XnaGui.Extensions {
                     }
                 }
             }
-
+            
             var texture = new Texture2D(spriteBatch.GraphicsDevice, width, height);
             texture.SetData(colors);
             spriteBatch.Draw(texture, position, color);
+            // DrawLine(spriteBatch, position, new Vector2(position.X + width, position.Y), color, borderWidth);
+            // DrawLine(spriteBatch, new Vector2(position.X, position.Y - 15), new Vector2(position.X, position.Y + height), color, borderWidth);
+            // DrawLine(spriteBatch, new Vector2(position.X + width, position.Y), new Vector2(position.X + width, position.Y + height), color,
+            //     borderWidth);
+            // DrawLine(spriteBatch, new Vector2(position.X, position.Y + height), new Vector2(position.X + width, position.Y + height), color,
+            //     borderWidth);
         }
 
         public static void DrawRightTriangle(this SpriteBatch spriteBatch, int width, int height, Color color) {

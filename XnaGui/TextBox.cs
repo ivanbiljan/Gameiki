@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -63,7 +64,7 @@ namespace XnaGui {
                 }
             }
             else {
-                if (++_cursorBlinkCounter > 50) {
+                if (++_cursorBlinkCounter > 30) {
                     _cursorBlinkCounter = 0;
                     _isCursorBlinking = !_isCursorBlinking;
                 }
