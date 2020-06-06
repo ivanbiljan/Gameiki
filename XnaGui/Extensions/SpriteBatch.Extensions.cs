@@ -147,38 +147,37 @@ namespace XnaGui.Extensions {
             DrawArbitraryPolygon(spriteBatch, vertices, Color.Aqua);
         }
 
-        public static void DrawRectangle(this SpriteBatch spriteBatch, Vector2 position, int width, int height, Color color,
-            int borderWidth = 1) {
+        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color color, int borderWidth = 1) {
             if (spriteBatch == null) {
                 throw new ArgumentNullException(nameof(spriteBatch));
             }
 
-            if (width <= 0) {
-                throw new ArgumentOutOfRangeException(nameof(width));
-            }
+            // if (width <= 0) {
+            //     throw new ArgumentOutOfRangeException(nameof(width));
+            // }
+            //
+            // if (height <= 0) {
+            //     throw new ArgumentOutOfRangeException(nameof(height));
+            // }
 
-            if (height <= 0) {
-                throw new ArgumentOutOfRangeException(nameof(height));
-            }
-
-            var colors = new Color[width * height];
-            for (var x = 0; x < width; ++x) {
-                for (var y = 0; y < height; ++y) {
-                    if (x <= borderWidth || x >= width - 1 - borderWidth || y <= borderWidth || y >= height - 1 - borderWidth) {
-                        colors[x + y * width] = color;
-                    }
-                }
-            }
-            
-            var texture = new Texture2D(spriteBatch.GraphicsDevice, width, height);
-            texture.SetData(colors);
-            spriteBatch.Draw(texture, position, color);
-            // DrawLine(spriteBatch, position, new Vector2(position.X + width, position.Y), color, borderWidth);
-            // DrawLine(spriteBatch, new Vector2(position.X, position.Y - 15), new Vector2(position.X, position.Y + height), color, borderWidth);
-            // DrawLine(spriteBatch, new Vector2(position.X + width, position.Y), new Vector2(position.X + width, position.Y + height), color,
-            //     borderWidth);
-            // DrawLine(spriteBatch, new Vector2(position.X, position.Y + height), new Vector2(position.X + width, position.Y + height), color,
-            //     borderWidth);
+            // var colors = new Color[width * height];
+            // for (var x = 0; x < width; ++x) {
+            //     for (var y = 0; y < height; ++y) {
+            //         if (x <= borderWidth || x >= width - 1 - borderWidth || y <= borderWidth || y >= height - 1 - borderWidth) {
+            //             colors[x + y * width] = color;
+            //         }
+            //     }
+            // }
+            //
+            // var texture = new Texture2D(spriteBatch.GraphicsDevice, width, height);
+            // texture.SetData(colors);
+            // spriteBatch.Draw(texture, position, color);
+            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), color, borderWidth);
+            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), color, borderWidth);
+            DrawLine(spriteBatch, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
+                borderWidth);
+            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
+                borderWidth);
         }
 
         public static void DrawRightTriangle(this SpriteBatch spriteBatch, int width, int height, Color color) {

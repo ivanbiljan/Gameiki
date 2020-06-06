@@ -104,7 +104,7 @@ namespace XnaGui {
                 spriteBatch.FillRectangle(_tickBox, BackgroundColor);
             }
             else {
-                //spriteBatch.DrawRectangle(Position, 10, 10, BackgroundColor);
+                spriteBatch.DrawRectangle(Position, 10, 10, BackgroundColor);
             }
 
             spriteBatch.DrawString(_font, _text, _textPosition, Color.White);
