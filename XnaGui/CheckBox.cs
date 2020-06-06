@@ -100,11 +100,11 @@ namespace XnaGui {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, DepthStencilState.Default,
                 new RasterizerState {ScissorTestEnable = true});
             spriteBatch.GraphicsDevice.ScissorRectangle = BoundBox;
-            if (!IsChecked) {
+            if (IsChecked) {
                 spriteBatch.FillRectangle(_tickBox, BackgroundColor);
             }
             else {
-                spriteBatch.DrawRectangle(Position, 10, 10, BackgroundColor);
+                spriteBatch.DrawRectangle(_tickBox, BackgroundColor);
             }
 
             spriteBatch.DrawString(_font, _text, _textPosition, Color.White);

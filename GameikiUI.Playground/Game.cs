@@ -28,7 +28,6 @@ namespace GameikiUI.Playground {
         protected override void Draw(GameTime gameTime) {
             _checkBox.Draw(gameTime, _spriteBatch);
             _spriteBatch.Begin();
-            _spriteBatch.DrawRectangle(_checkBox.Position, _checkBox.BoundBox.Width, _checkBox.BoundBox.Height, Color.Black);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
