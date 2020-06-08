@@ -33,7 +33,7 @@ namespace XnaGui {
             Dimensions = new Vector2(width, height);
             BoundBox = new Rectangle((int) Position.X, (int) Position.Y, width, height);
 
-            MouseManager.Click += OnClickedInternal;
+            MouseManager.LeftButtonDown += OnClickedInternal;
         }
 
         /// <summary>

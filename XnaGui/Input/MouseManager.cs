@@ -9,18 +9,31 @@ namespace XnaGui.Input {
     ///     Represents the mouse manager.
     /// </summary>
     internal static class MouseManager {
+        private static Vector2 _currentPosition;
+        private static Vector2 _previousPosition;
+        
         private static MouseState _currentState;
         private static MouseState _previousState;
 
         /// <summary>
         ///     Gets the current mouse position.
         /// </summary>
-        public static Vector2 MousePosition => new Vector2(_currentState.X, _currentState.Y);
+        public static Vector2 MousePosition => _currentPosition;
 
         /// <summary>
-        ///     Occurs when the mouse is clicked.
+        ///     Occurs when the left button is pressed.
         /// </summary>
-        public static event EventHandler Click;
+        public static event EventHandler LeftButtonDown;
+
+        /// <summary>
+        /// Occurs when the left button is released.
+        /// </summary>
+        public static event EventHandler LeftButtonUp;
+
+        /// <summary>
+        /// Occurs when the mouse is moved.
+        /// </summary>
+        public static event EventHandler Move;
 
         /// <summary>
         ///     Indicates whether the left mouse button has been pressed.
@@ -54,8 +67,18 @@ namespace XnaGui.Input {
         public static void Update() {
             _previousState = _currentState;
             _currentState = Mouse.GetState();
+            
             if (_currentState.LeftButton == ButtonState.Pressed && _previousState.LeftButton == ButtonState.Released) {
-                Click?.Invoke(null, EventArgs.Empty);
+                LeftButtonDown?.Invoke(null, EventArgs.Empty);
+            } else if (_currentState.LeftButton == ButtonState.Released && _previousState.LeftButton == ButtonState.Pressed) {
+                LeftButtonUp?.Invoke(null, EventArgs.Empty);
+            }
+            
+            _previousPosition = _currentPosition;
+            _currentPosition = new Vector2(_currentState.X, _currentState.Y);
+
+            if (_currentPosition != _previousPosition) {
+                Move?.Invoke(null, EventArgs.Empty);
             }
         }
     }
