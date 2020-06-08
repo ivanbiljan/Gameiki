@@ -32,6 +32,10 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="JetBrains.Annotations, Version=2020.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325">
+          <HintPath>..\packages\JetBrains.Annotations.2020.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553">
           <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.dll</HintPath>
         </Reference>
@@ -55,6 +59,8 @@
         <Compile Include="Button.cs" />
         <Compile Include="CheckBox.cs" />
         <Compile Include="Control.cs" />
+        <Compile Include="DragDeltaEventArgs.cs" />
+        <Compile Include="DraggableObjectBase.cs" />
         <Compile Include="Extensions\SpriteBatch.Extensions.cs" />
         <Compile Include="Helpers\MathHelper.cs" />
         <Compile Include="Input\MouseManager.cs" />
@@ -72,6 +78,9 @@
         <Compile Include="TextBox.cs" />
         <Compile Include="Utils.cs" />
         <Compile Include="XnaGui.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

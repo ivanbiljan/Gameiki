@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using XnaGui.Input;
@@ -8,11 +9,17 @@ namespace XnaGui {
     /// <summary>
     ///     Represents the base class for a GUI control.
     /// </summary>
+    [PublicAPI]
     public abstract class Control {
         /// <summary>
-        ///     Occurs when the control is clicked.
+        ///     Occurs when the control is pressed.
         /// </summary>
-        public static EventHandler Clicked;
+        public static event EventHandler LeftButtonDown;
+
+        /// <summary>
+        /// Occurs when the control is released.
+        /// </summary>
+        public static event EventHandler LeftButtonUp;
 
         private readonly Vector2 _origin;
         private Vector2 _position;
@@ -34,6 +41,11 @@ namespace XnaGui {
             BoundBox = new Rectangle((int) Position.X, (int) Position.Y, width, height);
 
             MouseManager.LeftButtonDown += OnLeftButtonDownInternal;
+            MouseManager.LeftButtonUp += OnLeftButtonUpInternal;
+        }
+
+        private void OnLeftButtonUpInternal(object sender, EventArgs e) {
+            OnLeftButtonUp(sender, e);
         }
 
         /// <summary>
@@ -144,7 +156,11 @@ namespace XnaGui {
         }
 
         protected virtual void OnLeftButtonDown(object sender, EventArgs args) {
-            Clicked?.Invoke(sender, args);
+            LeftButtonDown?.Invoke(this, args);
+        }
+
+        protected virtual void OnLeftButtonUp(object sender, EventArgs args) {
+            LeftButtonUp?.Invoke(this, args);
         }
 
         /// <summary>

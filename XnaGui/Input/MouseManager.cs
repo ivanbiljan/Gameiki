@@ -33,7 +33,7 @@ namespace XnaGui.Input {
         /// <summary>
         /// Occurs when the mouse is moved.
         /// </summary>
-        public static event EventHandler Move;
+        public static event EventHandler<DragDeltaEventArgs> Move;
 
         /// <summary>
         ///     Indicates whether the left mouse button has been pressed.
@@ -78,7 +78,7 @@ namespace XnaGui.Input {
             _currentPosition = new Vector2(_currentState.X, _currentState.Y);
 
             if (_currentPosition != _previousPosition) {
-                Move?.Invoke(null, EventArgs.Empty);
+                Move?.Invoke(null, new DragDeltaEventArgs(_previousPosition, _currentPosition));
             }
         }
     }
