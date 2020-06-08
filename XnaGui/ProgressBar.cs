@@ -44,7 +44,7 @@ namespace XnaGui {
             spriteBatch.Begin();
 
             var filledRectangle = new Rectangle((int) Position.X, (int) Position.Y, BoundBox.Width / Maximum * Value, BoundBox.Height);
-            spriteBatch.DrawRectangle(BoundBox, ForegroundColor);
+            spriteBatch.FillRectangle(BoundBox, BackgroundColor);
             spriteBatch.FillRectangle(filledRectangle, ForegroundColor);
 
             spriteBatch.End();
