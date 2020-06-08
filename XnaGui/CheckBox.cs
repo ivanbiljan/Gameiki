@@ -112,13 +112,13 @@ namespace XnaGui {
             spriteBatch.End();
         }
 
-        protected override void OnClicked(object sender, EventArgs args) {
-            base.OnClicked(sender, args);
-            if (!_tickBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y)) {
-                return;
-            }
-
-            IsChecked = !IsChecked;
-        }
+        // protected override void OnClicked(object sender, EventArgs args) {
+        //     base.OnClicked(sender, args);
+        //     if (!_tickBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y)) {
+        //         return;
+        //     }
+        //
+        //     IsChecked = !IsChecked;
+        // }
     }
 }

@@ -33,7 +33,7 @@ namespace XnaGui {
             Dimensions = new Vector2(width, height);
             BoundBox = new Rectangle((int) Position.X, (int) Position.Y, width, height);
 
-            MouseManager.LeftButtonDown += OnClickedInternal;
+            MouseManager.LeftButtonDown += OnLeftButtonDownInternal;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace XnaGui {
             }
         }
 
-        protected virtual void OnClicked(object sender, EventArgs args) {
+        protected virtual void OnLeftButtonDown(object sender, EventArgs args) {
             Clicked?.Invoke(sender, args);
         }
 
@@ -153,12 +153,12 @@ namespace XnaGui {
         /// <returns><c>true</c> if the control is hovered over; otherwise, <c>false</c>.</returns>
         private bool IsHoveredOver() => BoundBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y);
 
-        private void OnClickedInternal(object sender, EventArgs args) {
+        private void OnLeftButtonDownInternal(object sender, EventArgs args) {
             if (!IsHoveredOver()) {
                 return;
             }
 
-            OnClicked(sender, args);
+            OnLeftButtonDown(sender, args);
         }
     }
 }

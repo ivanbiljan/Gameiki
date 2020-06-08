@@ -107,9 +107,9 @@ namespace XnaGui {
             UserInputHandler.GetTextInput(ref _text);
         }
 
-        protected override void OnClicked(object sender, EventArgs args) {
-            _hasFocus = !_hasFocus;
-            base.OnClicked(sender, args);
-        }
+        // protected override void OnClicked(object sender, EventArgs args) {
+        //     _hasFocus = !_hasFocus;
+        //     base.OnClicked(sender, args);
+        // }
     }
 }
