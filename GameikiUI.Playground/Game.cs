@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -12,6 +13,7 @@ namespace GameikiUI.Playground {
         private DynamicSpriteFont _arialFont;
         private SpriteBatch _spriteBatch;
         private CheckBox _checkBox;
+        private TrackBar _progressBar;
 
         public Game() {
             _graphics = new GraphicsDeviceManager(this)
@@ -26,7 +28,8 @@ namespace GameikiUI.Playground {
         }
 
         protected override void Draw(GameTime gameTime) {
-            _checkBox.Draw(gameTime, _spriteBatch);
+            //_checkBox.Draw(gameTime, _spriteBatch);
+            _progressBar.Draw(gameTime, _spriteBatch);
             _spriteBatch.Begin();
             _spriteBatch.End();
             base.Draw(gameTime);
@@ -43,6 +46,8 @@ namespace GameikiUI.Playground {
             _checkBox = new CheckBox(null, 100, 100, 100, 25, "Hellogy", _arialFont) {
                 TextAlign = TextAlign.BottomCenter
             };
+            
+            _progressBar = new TrackBar(null, 100, 100, 100, 25) {Value = 50};
         }
 
         protected override void UnloadContent() {

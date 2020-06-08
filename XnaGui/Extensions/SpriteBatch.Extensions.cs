@@ -160,24 +160,24 @@ namespace XnaGui.Extensions {
             //     throw new ArgumentOutOfRangeException(nameof(height));
             // }
 
-            // var colors = new Color[width * height];
-            // for (var x = 0; x < width; ++x) {
-            //     for (var y = 0; y < height; ++y) {
-            //         if (x <= borderWidth || x >= width - 1 - borderWidth || y <= borderWidth || y >= height - 1 - borderWidth) {
-            //             colors[x + y * width] = color;
-            //         }
-            //     }
-            // }
-            //
-            // var texture = new Texture2D(spriteBatch.GraphicsDevice, width, height);
-            // texture.SetData(colors);
-            // spriteBatch.Draw(texture, position, color);
-            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), color, borderWidth);
-            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), color, borderWidth);
-            DrawLine(spriteBatch, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
-                borderWidth);
-            DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
-                borderWidth);
+            var colors = new Color[rectangle.Width * rectangle.Height];
+            for (var x = 0; x < rectangle.Width; ++x) {
+                for (var y = 0; y < rectangle.Height; ++y) {
+                    if (x <= borderWidth || x >= rectangle.Width - 1 - borderWidth || y <= borderWidth || y >= rectangle.Height - 1 - borderWidth) {
+                        colors[x + y * rectangle.Width] = color;
+                    }
+                }
+            }
+            
+            var texture = new Texture2D(spriteBatch.GraphicsDevice, rectangle.Width, rectangle.Height);
+            texture.SetData(colors);
+            spriteBatch.Draw(texture, new Vector2(rectangle.X, rectangle.Y), color);
+            // DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), color, borderWidth);
+            // DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), color, borderWidth);
+            // DrawLine(spriteBatch, new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
+            //     borderWidth);
+            // DrawLine(spriteBatch, new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), color,
+            //     borderWidth);
         }
 
         public static void DrawRightTriangle(this SpriteBatch spriteBatch, int width, int height, Color color) {

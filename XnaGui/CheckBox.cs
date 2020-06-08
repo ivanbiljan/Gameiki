@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using XnaGui.Extensions;
+using XnaGui.Input;
 
 namespace XnaGui {
     public sealed class CheckBox : Control {
@@ -113,8 +114,11 @@ namespace XnaGui {
 
         protected override void OnClicked(object sender, EventArgs args) {
             base.OnClicked(sender, args);
+            if (!_tickBox.Contains((int) MouseManager.MousePosition.X, (int) MouseManager.MousePosition.Y)) {
+                return;
+            }
+
             IsChecked = !IsChecked;
-            Debug.WriteLine(IsChecked);
         }
     }
 }

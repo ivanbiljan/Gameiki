@@ -26,8 +26,7 @@ namespace XnaGui.Input {
         ///     Indicates whether the left mouse button has been pressed.
         /// </summary>
         /// <returns><c>true</c> if the button has been pressed; otherwise, <c>false</c>.</returns>
-        public static bool IsLeftButtonDown() =>
-            _previousState.LeftButton == ButtonState.Released && _currentState.LeftButton == ButtonState.Pressed;
+        public static bool IsLeftButtonDown() => _currentState.LeftButton == ButtonState.Pressed;
 
         /// <summary>
         ///     Indicates whether the left button has been released.
@@ -40,8 +39,7 @@ namespace XnaGui.Input {
         ///     Indicates whether the right mouse button has been pressed.
         /// </summary>
         /// <returns><c>true</c> if the button has been pressed; otherwise, <c>false</c>.</returns>
-        public static bool IsRightButtonDown() =>
-            _previousState.RightButton == ButtonState.Released && _currentState.RightButton == ButtonState.Pressed;
+        public static bool IsRightButtonDown() => _currentState.RightButton == ButtonState.Pressed;
 
         /// <summary>
         ///     Indicates whether the right mouse button has been released.
@@ -56,7 +54,7 @@ namespace XnaGui.Input {
         public static void Update() {
             _previousState = _currentState;
             _currentState = Mouse.GetState();
-            if (IsLeftButtonDown()) {
+            if (_currentState.LeftButton == ButtonState.Pressed && _previousState.LeftButton == ButtonState.Released) {
                 Click?.Invoke(null, EventArgs.Empty);
             }
         }
