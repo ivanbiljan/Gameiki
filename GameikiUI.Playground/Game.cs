@@ -47,7 +47,7 @@ namespace GameikiUI.Playground {
                 TextAlign = TextAlign.BottomCenter
             };
             
-            _progressBar = new TrackBar(null, 100, 100, 100, 25) {Value = 50};
+            _progressBar = new TrackBar(null, 100, 100, 200, 50) {Value = 50};
         }
 
         protected override void UnloadContent() {
@@ -55,6 +55,7 @@ namespace GameikiUI.Playground {
         }
 
         protected override void Update(GameTime gameTime) {
+            _progressBar.Update(gameTime);
             base.Update(gameTime);
         }
     }

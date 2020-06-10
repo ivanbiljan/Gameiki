@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -112,12 +113,9 @@ namespace XnaGui {
         /// <param name="gameTime">The current time snapshot.</param>
         /// <param name="spriteBatch">The sprite batch used to draw the control.</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-            spriteBatch.Begin();
             foreach (var child in Children) {
                 child.Draw(gameTime, spriteBatch);
             }
-            
-            spriteBatch.End();
         }
 
         /// <summary>
@@ -174,6 +172,7 @@ namespace XnaGui {
                 return;
             }
 
+            Debug.WriteLine("BUTTON DOWN");
             OnLeftButtonDown(sender, args);
         }
     }
