@@ -7,6 +7,26 @@ using Microsoft.Win32;
 using Mono.Cecil;
 
 namespace Gameiki.Patcher {
+    internal sealed class DependencyResolver : BaseAssemblyResolver {
+        private readonly DefaultAssemblyResolver _resolver;
+
+        public DependencyResolver() {
+            _resolver = new DefaultAssemblyResolver();
+        }
+
+        public override AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters) {
+            AssemblyDefinition assemblyDefinition = null;
+            try {
+                assemblyDefinition = _resolver.Resolve(name);
+            }
+            catch (AssemblyResolutionException) {
+                
+            }
+
+            return assemblyDefinition;
+        }
+    }
+    
     internal class Program {
         public static void Main(string[] args) {
             var key = Environment.Is64BitOperatingSystem
@@ -21,7 +41,8 @@ namespace Gameiki.Patcher {
                 throw new Exception("You do not seem to own a legal copy of Terraria.");
             }
 
-            var terraria = AssemblyDefinition.ReadAssembly(terrariaPath);
+            var terraria =
+                AssemblyDefinition.ReadAssembly(terrariaPath, new ReaderParameters {AssemblyResolver = new DependencyResolver()});
             var mods = from type in Assembly.GetExecutingAssembly().GetTypes()
                 where !type.IsInterface && !type.IsAbstract && typeof(IModification).IsAssignableFrom(type)
                 select Activator.CreateInstance(type) as IModification;

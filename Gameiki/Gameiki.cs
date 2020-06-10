@@ -64,7 +64,7 @@ namespace Gameiki {
             MyPlayer.SetData("session", new Session());
 
             // Initialize the GUI
-            Toolbar.Instance.Initialize();
+            //Toolbar.Instance.Initialize();
 
             // Register commands
             CommandManager.Instance.RegisterCommand(new Regex("help"), Help, ".help - Lists all commands");
@@ -87,15 +87,16 @@ namespace Gameiki {
                 return;
             }
 
-            var tilesX = Main.screenWidth / 16 + Lighting.offScreenTiles * 2;
-            var tilesY = Main.screenHeight / 16 + Lighting.offScreenTiles * 2;
-            for (var i = 0; i < tilesX; ++i) {
-                var lightingStates = Lighting.states[i];
-                for (var j = 0; j < tilesY; ++j) {
-                    var state = lightingStates[j];
-                    state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
-                }
-            }
+            
+            // var tilesX = Main.screenWidth / 16 + Lighting.OffScreenTiles * 2;
+            // var tilesY = Main.screenHeight / 16 + Lighting.OffScreenTiles * 2;
+            // for (var i = 0; i < tilesX; ++i) {
+            //     var lightingStates = Lighting[i];
+            //     for (var j = 0; j < tilesY; ++j) {
+            //         var state = lightingStates[j];
+            //         state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
+            //     }
+            // }
         }
 
         private void OnPreHurt(object sender, HandledEventArgs e) {
@@ -187,7 +188,7 @@ namespace Gameiki {
             }
 
             item.SetDefaults(netId);
-            MyPlayer.GetItem(Main.myPlayer, item);
+            MyPlayer.GetItem(Main.myPlayer, item, GetItemSettings.InventoryUIToInventorySettings);
             MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
         }
     }

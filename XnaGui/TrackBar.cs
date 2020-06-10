@@ -3,6 +3,17 @@ using Microsoft.Xna.Framework.Graphics;
 using XnaGui.Extensions;
 
 namespace XnaGui {
+    internal class TrackBarThumb : DraggableObjectBase {
+        public TrackBarThumb(Control parent, int x, int y, int width, int height) : base(parent, x, y, width, height) {
+        }
+
+        protected override void OnDrag(object sender, DragDeltaEventArgs e) {
+            
+            
+            base.OnDrag(sender, e);
+        }
+    }
+    
     public class TrackBar : RangeControlBase {
         private readonly Rectangle _trackbar;
         
@@ -36,7 +47,7 @@ namespace XnaGui {
             spriteBatch.DrawRectangle(_trackbar, Color.White);
             spriteBatch.FillRectangle(filledRectangle, Color.Chartreuse);
 
-            var thumbRadius = 5;
+            const int thumbRadius = 5;
             var thumbCenter = new Vector2(_trackbar.X + BoundBox.Width / Maximum * Value - thumbRadius / 2, _trackbar.Y + 2);
             spriteBatch.FillCircle(thumbCenter, thumbRadius, Color.Black);
 

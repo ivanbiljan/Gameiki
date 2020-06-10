@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 
 namespace Gameiki {
     internal sealed class SongPlayer {
@@ -77,8 +78,8 @@ namespace Gameiki {
             }
 
             var displayString = $"Now playing: '{_currentSong.Name}'";
-            Main.spriteBatch.DrawString(Main.fontMouseText, displayString,
-                new Vector2((float) (628 - Main.fontMouseText.MeasureString(displayString).X * 0.5) + (Main.screenWidth - 800),
+            Main.spriteBatch.DrawString(FontAssets.MouseText.Value, displayString,
+                new Vector2((float) (628 - FontAssets.MouseText.Value.MeasureString(displayString).X * 0.5) + (Main.screenWidth - 800),
                     Main.screenHeight - 84), Color.White);
         }
     }
