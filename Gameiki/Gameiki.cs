@@ -31,27 +31,13 @@ namespace Gameiki {
             Terraria.Program.LaunchGame(args);
         }
 
-        private void Help(Match match) {
-            var output = new StringBuilder();
-            foreach (var command in CommandManager.Instance.Commands) {
-                if (string.IsNullOrWhiteSpace(command.HelpText)) {
-                    continue;
-                }
-
-                output.AppendLine(command.HelpText);
-            }
-
-            MyPlayer.SendGameikiMessage("Available commands:", Color.LimeGreen);
-            MyPlayer.SendGameikiMessage(output.ToString(), Color.Yellow);
-        }
-
         private void OnChat(object sender, ChatEventArgs e) {
             if (!e.Text.StartsWith(".")) {
                 return;
             }
 
             try {
-                CommandManager.Instance.Run(e.Text.Substring(1));
+                CommandModule.Instance.Run(e.Text.Substring(1));
                 e.Handled = true;
             }
             catch (Exception ex) {
@@ -65,9 +51,6 @@ namespace Gameiki {
 
             // Setup
             MyPlayer.SetData("session", new Session());
-
-            // Register commands
-            CommandManager.Instance.Register("item", SpawnItem, "Spawns an item.");
         }
 
         private void OnPostUpdate(object sender, EventArgs e) {
@@ -83,6 +66,12 @@ namespace Gameiki {
             var session = MyPlayer.GetData<Session>("session");
             if (!session.IsFullbright) {
                 return;
+            }
+            
+            for (var x = 0; x < Lighting.NewEngine._workingLightMap.Width; ++x) {
+                for (var y = 0; y < Lighting.NewEngine._workingLightMap.Height; ++y) {
+                    Lighting.NewEngine._workingLightMap[x, y] = new Vector3(255f, 255f, 255f);
+                }
             }
         }
 
@@ -137,51 +126,6 @@ namespace Gameiki {
             for (var i = 0; i < MyPlayer.buffImmune.Length; ++i) {
                 MyPlayer.buffImmune[i] = true;
             }
-        }
-
-        private void SpawnItem(CommandContext context) {
-            var args = context.Arguments.ToArray();
-            var player = context.Player;
-            if (args.Length < 1) {
-                player.SendGameikiMessage("Missing item name.", Color.Red);
-                return;
-            }
-            
-            var item = new Item();
-            var items = new List<Item>();
-            var itemName = args[0];
-            if (!int.TryParse(itemName, out var netId)) {
-                for (var i = 0; i < Main.maxItemTypes; ++i) {
-                    item.SetDefaults(i);
-                    if (item.Name.StartsWith(itemName, StringComparison.CurrentCulture)) {
-                        items.Add(item);
-                    }
-            
-                    if (item.Name.Equals(itemName, StringComparison.CurrentCulture)) {
-                        items = new List<Item> {item};
-                        break;
-                    }
-                }
-            
-                if (items.Count == 0) {
-                    MyPlayer.SendGameikiMessage("No results found.");
-                    return;
-                }
-            
-                if (items.Count > 1) {
-                    MyPlayer.SendGameikiMessage($"Found multiple matches: {string.Join(", ", items.Select(i => i.Name))}", Color.Yellow);
-                    return;
-                }
-            
-                item = items[0];
-                item.stack = item.maxStack;
-            }
-            else {
-                item.SetDefaults(netId);
-            }
-
-            MyPlayer.GetItem(Main.myPlayer, item, GetItemSettings.InventoryUIToInventorySettings);
-            MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
         }
     }
 }

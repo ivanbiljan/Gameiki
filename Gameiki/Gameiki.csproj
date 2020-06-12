@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=2020.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325">
+      <HintPath>..\packages\JetBrains.Annotations.2020.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553">
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.dll</HintPath>
     </Reference>
@@ -63,12 +67,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\IList.Extensions.cs" />
+    <Compile Include="Extensions\Parameter.Extensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Framework\AnchorPosition.cs" />
+    <Compile Include="Framework\ArgumentValidators\Int32Validator.cs" />
+    <Compile Include="Framework\ArgumentValidators\StringValidator.cs" />
     <Compile Include="Framework\Button.cs" />
+    <Compile Include="Framework\Commands\AliasesAttribute.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
+    <Compile Include="Framework\Commands\CommandAttribute.cs" />
     <Compile Include="Framework\Commands\CommandContext.cs" />
     <Compile Include="Framework\Commands\CommandManager.cs" />
+    <Compile Include="Framework\Commands\CommandModule.cs" />
+    <Compile Include="Framework\Commands\DefaultAttribute.cs" />
+    <Compile Include="Framework\Commands\IArgument{T}.cs" />
+    <Compile Include="Framework\Commands\ICommand.cs" />
+    <Compile Include="Framework\Commands\ICommandModule.cs" />
+    <Compile Include="Framework\Commands\ParameterAttribute.cs" />
     <Compile Include="Framework\Control.cs" />
     <Compile Include="Framework\Label.cs" />
     <Compile Include="Framework\Orientation.cs" />
@@ -90,6 +105,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -6,7 +6,7 @@ namespace Gameiki.Framework.Commands {
     /// Represents a command.
     /// </summary>
     public sealed class Command {
-        internal readonly Action<CommandContext> Callback;
+        internal readonly Action<string> Callback;
         
         /// <summary>
         /// Gets the aliases.
@@ -30,7 +30,7 @@ namespace Gameiki.Framework.Commands {
         /// <param name="description">The description.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="callback">The callback method.</param>
-        public Command(string[] aliases, string description, string helpText, Action<CommandContext> callback) {
+        public Command(string[] aliases, string description, string helpText, Action<string> callback) {
             Aliases = aliases ?? new string[0];
             Description = description;
             HelpText = helpText;
