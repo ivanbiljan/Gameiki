@@ -41,7 +41,7 @@ namespace Gameiki {
                 e.Handled = true;
             }
             catch (Exception ex) {
-                MessageBox.Show(ex.ToString());
+                MyPlayer.SendGameikiMessage(ex.ToString());
             }
         }
 

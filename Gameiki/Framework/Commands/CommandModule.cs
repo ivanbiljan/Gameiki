@@ -137,10 +137,8 @@ namespace Gameiki.Framework.Commands {
                                 if (!parameter.IsOptional()) {
                                     throw new Exception("Invalid method call.");
                                 }
-
-                                if (parameter.GetCustomAttributes(typeof(DefaultAttribute), false)[0] is DefaultAttribute defaultAttribute) {
-                                    coercedArgs[i] = defaultAttribute.Value;
-                                }
+                                
+                                coercedArgs[i] = parameter.GetCustomAttribute<DefaultAttribute>()?.Value ?? parameter.RawDefaultValue;
                             }
                         }
                         
