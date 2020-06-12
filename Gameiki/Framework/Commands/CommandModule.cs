@@ -124,24 +124,19 @@ namespace Gameiki.Framework.Commands {
                         if (!_validators.TryGetValue(parameter.ParameterType, out var validator)) {
                             throw new Exception($"Missing argument validator for type '{parameter.ParameterType.Name}'");
                         }
-                        
-                        if (optionMatches.TryGetValue(parameter.Name, out var arg)) {
-                            coercedArgs[i] = validator().Validate(arg);
+
+                        var positionalArgument = strippedArgs.ElementAtOrDefault(i);
+                        if (positionalArgument != null) {
+                            coercedArgs[i] = positionalArgument;
                         }
                         else {
-                            var positionalArgument = strippedArgs.ElementAtOrDefault(i);
-                            if (positionalArgument != null) {
-                                coercedArgs[i] = positionalArgument;
+                            if (!parameter.IsOptional()) {
+                                throw new Exception("Invalid method call.");
                             }
-                            else {
-                                if (!parameter.IsOptional()) {
-                                    throw new Exception("Invalid method call.");
-                                }
                                 
-                                coercedArgs[i] = parameter.GetCustomAttribute<DefaultAttribute>()?.Value ?? parameter.RawDefaultValue;
-                            }
+                            coercedArgs[i] = parameter.GetCustomAttribute<DefaultAttribute>()?.Value ?? parameter.RawDefaultValue;
                         }
-                        
+
                     }
 
                     commandInfo.Invoke(obj, coercedArgs);

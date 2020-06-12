@@ -83,7 +83,6 @@
     <Compile Include="Framework\Commands\ICommand.cs" />
     <Compile Include="Framework\Commands\ICommandModule.cs" />
     <Compile Include="Framework\Commands\ParameterAttribute.cs" />
-    <Compile Include="Framework\TextBox.cs" />
     <Compile Include="Gameiki.cs" />
     <Compile Include="GameikiCommands.cs" />
     <Compile Include="Program.cs" />
