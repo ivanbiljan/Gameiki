@@ -67,6 +67,7 @@
     <Compile Include="Framework\AnchorPosition.cs" />
     <Compile Include="Framework\Button.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
+    <Compile Include="Framework\Commands\CommandContext.cs" />
     <Compile Include="Framework\Commands\CommandManager.cs" />
     <Compile Include="Framework\Control.cs" />
     <Compile Include="Framework\Label.cs" />

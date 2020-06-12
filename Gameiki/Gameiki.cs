@@ -11,6 +11,8 @@ using Gameiki.Framework.Commands;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Graphics;
+using Terraria.Graphics.Light;
 
 namespace Gameiki {
     internal sealed class Gameiki {
@@ -49,7 +51,7 @@ namespace Gameiki {
             }
 
             try {
-                CommandManager.Instance.RunCommand(e.Text.Substring(1));
+                CommandManager.Instance.Run(e.Text.Substring(1));
                 e.Handled = true;
             }
             catch (Exception ex) {
@@ -58,18 +60,14 @@ namespace Gameiki {
         }
 
         private void OnGameInitialized(object sender, EventArgs e) {
+            // Misc
             Main.versionNumber += "\nGameiki Remaster v1.0. Powered by Mono.Cecil";
 
             // Setup
             MyPlayer.SetData("session", new Session());
 
-            // Initialize the GUI
-            //Toolbar.Instance.Initialize();
-
             // Register commands
-            CommandManager.Instance.RegisterCommand(new Regex("help"), Help, ".help - Lists all commands");
-            CommandManager.Instance.RegisterCommand(new Regex(@"(?:item|i)(.*)"), SpawnItem,
-                ".item <name or id> - Spawns the item");
+            CommandManager.Instance.Register("item", SpawnItem, "Spawns an item.");
         }
 
         private void OnPostUpdate(object sender, EventArgs e) {
@@ -86,17 +84,6 @@ namespace Gameiki {
             if (!session.IsFullbright) {
                 return;
             }
-
-            
-            // var tilesX = Main.screenWidth / 16 + Lighting.OffScreenTiles * 2;
-            // var tilesY = Main.screenHeight / 16 + Lighting.OffScreenTiles * 2;
-            // for (var i = 0; i < tilesX; ++i) {
-            //     var lightingStates = Lighting[i];
-            //     for (var j = 0; j < tilesY; ++j) {
-            //         var state = lightingStates[j];
-            //         state.r = state.r2 = state.g = state.g2 = state.b = state.b2 = 1f;
-            //     }
-            // }
         }
 
         private void OnPreHurt(object sender, HandledEventArgs e) {
@@ -152,42 +139,47 @@ namespace Gameiki {
             }
         }
 
-        private void SpawnItem(Match match) {
-            var itemName = match.Groups[1].Value.ToLowerInvariant();
-            if (string.IsNullOrWhiteSpace(itemName)) {
-                MyPlayer.SendGameikiMessage("Invalid syntax. Proper syntax: .item <name or id>", Color.Red);
+        private void SpawnItem(CommandContext context) {
+            var args = context.Arguments.ToArray();
+            var player = context.Player;
+            if (args.Length < 1) {
+                player.SendGameikiMessage("Missing item name.", Color.Red);
                 return;
             }
-
+            
             var item = new Item();
             var items = new List<Item>();
+            var itemName = args[0];
             if (!int.TryParse(itemName, out var netId)) {
                 for (var i = 0; i < Main.maxItemTypes; ++i) {
                     item.SetDefaults(i);
-                    if (item.Name.StartsWith(itemName, StringComparison.OrdinalIgnoreCase)) {
+                    if (item.Name.StartsWith(itemName, StringComparison.CurrentCulture)) {
                         items.Add(item);
                     }
-
-                    if (item.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase)) {
+            
+                    if (item.Name.Equals(itemName, StringComparison.CurrentCulture)) {
                         items = new List<Item> {item};
                         break;
                     }
                 }
-
+            
                 if (items.Count == 0) {
                     MyPlayer.SendGameikiMessage("No results found.");
+                    return;
                 }
-
+            
                 if (items.Count > 1) {
                     MyPlayer.SendGameikiMessage($"Found multiple matches: {string.Join(", ", items.Select(i => i.Name))}", Color.Yellow);
                     return;
                 }
-
+            
                 item = items[0];
                 item.stack = item.maxStack;
             }
+            else {
+                item.SetDefaults(netId);
+            }
 
-            item.SetDefaults(netId);
             MyPlayer.GetItem(Main.myPlayer, item, GetItemSettings.InventoryUIToInventorySettings);
             MyPlayer.SendGameikiMessage($"Spawned {item.Name} (x{item.stack})", Color.LimeGreen);
         }
