@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Gameiki.Extensions;
-using Gameiki.Framework.ArgumentValidators;
+using Gameiki.Framework.Commands.ArgumentValidators;
 using ReLogic.Utilities;
 
 namespace Gameiki.Framework.Commands {
