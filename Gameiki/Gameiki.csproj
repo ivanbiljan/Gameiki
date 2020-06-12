@@ -69,8 +69,6 @@
     <Compile Include="Extensions\IList.Extensions.cs" />
     <Compile Include="Extensions\Parameter.Extensions.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
-    <Compile Include="Framework\AnchorPosition.cs" />
-    <Compile Include="Framework\Button.cs" />
     <Compile Include="Framework\Commands\AliasesAttribute.cs" />
     <Compile Include="Framework\Commands\ArgumentValidators\Int32Validator.cs" />
     <Compile Include="Framework\Commands\ArgumentValidators\StringValidator.cs" />
@@ -84,12 +82,7 @@
     <Compile Include="Framework\Commands\ICommand.cs" />
     <Compile Include="Framework\Commands\ICommandModule.cs" />
     <Compile Include="Framework\Commands\ParameterAttribute.cs" />
-    <Compile Include="Framework\Control.cs" />
-    <Compile Include="Framework\Label.cs" />
-    <Compile Include="Framework\Orientation.cs" />
-    <Compile Include="Framework\Slider.cs" />
     <Compile Include="Framework\TextBox.cs" />
-    <Compile Include="Framework\Toolbar.cs" />
     <Compile Include="Gameiki.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
