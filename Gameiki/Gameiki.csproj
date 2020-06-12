@@ -68,7 +68,7 @@
   <ItemGroup>
     <Compile Include="Extensions\IList.Extensions.cs" />
     <Compile Include="Extensions\Parameter.Extensions.cs" />
-    <Compile Include="Extensions\PlayerExtensions.cs" />
+    <Compile Include="Extensions\Player.Extensions.cs" />
     <Compile Include="Framework\Commands\AliasesAttribute.cs" />
     <Compile Include="Framework\Commands\ArgumentValidators\Int32Validator.cs" />
     <Compile Include="Framework\Commands\ArgumentValidators\StringValidator.cs" />
