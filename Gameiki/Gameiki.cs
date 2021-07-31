@@ -6,8 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Gameiki.Extensions;
-using Gameiki.Framework;
-using Gameiki.Framework.Commands;
 using Gameiki.Patcher.Events;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -32,17 +30,7 @@ namespace Gameiki {
         }
 
         private void OnChat(object sender, ChatEventArgs e) {
-            if (!e.Text.StartsWith(".")) {
-                return;
-            }
-
-            try {
-                CommandModule.Instance.Run(e.Text.Substring(1));
-                e.Handled = true;
-            }
-            catch (Exception ex) {
-                MyPlayer.SendGameikiMessage(ex.ToString());
-            }
+            // TODO
         }
 
         private void OnGameInitialized(object sender, EventArgs e) {
