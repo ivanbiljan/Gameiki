@@ -12,6 +12,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -70,21 +72,7 @@
     <Compile Include="Extensions\MemberInfo.Extensions.cs" />
     <Compile Include="Extensions\ParameterInfo.Extensions.cs" />
     <Compile Include="Extensions\Player.Extensions.cs" />
-    <Compile Include="Framework\Commands\AliasesAttribute.cs" />
-    <Compile Include="Framework\Commands\ArgumentValidators\Int32Validator.cs" />
-    <Compile Include="Framework\Commands\ArgumentValidators\StringValidator.cs" />
-    <Compile Include="Framework\Commands\Command.cs" />
-    <Compile Include="Framework\Commands\CommandAttribute.cs" />
-    <Compile Include="Framework\Commands\CommandContext.cs" />
-    <Compile Include="Framework\Commands\CommandManager.cs" />
-    <Compile Include="Framework\Commands\CommandModule.cs" />
-    <Compile Include="Framework\Commands\DefaultAttribute.cs" />
-    <Compile Include="Framework\Commands\IArgument{T}.cs" />
-    <Compile Include="Framework\Commands\ICommand.cs" />
-    <Compile Include="Framework\Commands\ICommandModule.cs" />
-    <Compile Include="Framework\Commands\ParameterAttribute.cs" />
     <Compile Include="Gameiki.cs" />
-    <Compile Include="GameikiCommands.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameikiUtils.cs" />
@@ -120,4 +108,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets" Condition="Exists('..\packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets'))" />
+  </Target>
 </Project>
